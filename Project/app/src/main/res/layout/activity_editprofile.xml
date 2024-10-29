@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpPage"
+    tools:context=".editProfilePage"
     android:background="@color/sand">
 
 
@@ -20,6 +20,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/navbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <TextView
@@ -42,21 +43,12 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="50sp">
 
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:layout_marginEnd="20sp"
-            android:background="@color/brown"
-            android:textColor="@color/white"/>
 
         <Button
-            android:id="@+id/signup_button"
+            android:id="@+id/submit_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up"
-            android:layout_marginStart="20sp"
+            android:text="submit"
             android:background="@color/brown"
             android:textColor="@color/white"/>
     </LinearLayout>
@@ -67,7 +59,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="25sp"
-        app:layout_constraintTop_toBottomOf="@id/signuptext"
+        app:layout_constraintTop_toBottomOf="@id/editProfileText"
         app:layout_constraintBottom_toTopOf="@id/buttonPanel"
         android:paddingLeft="30sp"
         android:paddingRight="30sp">
@@ -178,10 +170,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/signuptext"
+        android:id="@+id/editProfileText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
+        android:text="Edit Profile"
         android:textSize="25sp"
         android:textColor="@color/brown"
         android:layout_marginTop="100sp"
