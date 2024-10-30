@@ -1,4 +1,4 @@
 package com.example.project;
 
-public class SignUpPage {
+public class SignUpActivity {
 }
