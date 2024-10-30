@@ -1,4 +1,4 @@
 package com.example.project;
 
-public class LoginPage {
+public class SearchActivity {
 }
