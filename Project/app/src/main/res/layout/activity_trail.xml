@@ -34,14 +34,41 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/trailname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:textSize="32sp"
+        android:text="title"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"/>
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintVertical_bias="0.099" />
+
+    <TextView
+        android:id="@+id/traillocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="location"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintVertical_bias="0.186" />
+
+    <TextView
+        android:id="@+id/traildescription"
+        android:layout_width="275dp"
+        android:layout_height="64dp"
+        android:text="description"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintVertical_bias="0.289" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
