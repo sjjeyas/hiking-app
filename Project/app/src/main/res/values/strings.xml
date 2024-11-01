@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">GoHiking!</string>
+    <string name="action_home">Home</string>
     <string name="action_profile">Profile</string>
     <string name="action_trailsearch">Search Trails</string>
     <string name="action_friends">Friends</string>
     <string name="action_groupsearch">Groups</string>
+
 </resources>

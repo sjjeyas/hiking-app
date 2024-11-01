@@ -1,4 +1,4 @@
 package com.example.project;
 
-public class editProfilePage {
+public class FriendsActivity {
 }
