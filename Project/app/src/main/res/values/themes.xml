@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/dark_green</item>
         <item name="colorControlNormal">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="Theme.Project" parent="Base.Theme.Project" />
