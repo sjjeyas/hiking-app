@@ -32,44 +32,41 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/buttonPanel"
+    <Button
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/loginfields"
+        android:background="@color/brown"
+        android:text="Login"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginfields"
+        app:layout_constraintVertical_bias="0.062" />
 
-        <Button
-            android:id="@+id/signup_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SignUp"
-            android:layout_marginEnd="20sp"
-            android:background="@color/brown"
-            android:textColor="@color/white"/>
-
-        <Button
-            android:id="@+id/submit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:layout_marginStart="20sp"
-            android:background="@color/brown"
-            android:textColor="@color/white"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account? Sign Up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_button"
+        app:layout_constraintVertical_bias="0.038" />
 
     <LinearLayout
         android:id="@+id/loginfields"
         android:layout_width="match_parent"
         android:layout_height="146dp"
-        android:orientation="vertical"
         android:layout_marginTop="25sp"
-        app:layout_constraintTop_toBottomOf="@id/logintext"
-        app:layout_constraintBottom_toTopOf="@id/buttonPanel"
+        android:orientation="vertical"
         android:paddingLeft="30sp"
-        android:paddingRight="30sp">
+        android:paddingRight="30sp"
+        app:layout_constraintTop_toBottomOf="@id/logintext">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,20 +78,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
+                android:gravity="center_vertical"
                 android:text="Username"
                 android:textColor="@color/brown"
-                android:gravity="center_vertical"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/editusername"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".9"
-                android:ems="15"
                 android:backgroundTint="@color/brown"
-                android:textSize="15sp"
-                android:inputType="text" />
+                android:ems="15"
+                android:inputType="text"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -105,20 +102,20 @@
             <TextView
                 android:id="@+id/passwordTextview"
                 android:layout_width="0dp"
-                android:textColor="@color/brown"
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
-                android:text="Password"
                 android:gravity="center_vertical"
+                android:text="Password"
+                android:textColor="@color/brown"
                 android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/editPassword"
                 android:layout_width="0dp"
-                android:layout_weight=".9"
                 android:layout_height="wrap_content"
-                android:ems="15"
+                android:layout_weight=".9"
                 android:backgroundTint="@color/brown"
+                android:ems="15"
                 android:inputType="textPassword" />
         </LinearLayout>
 
