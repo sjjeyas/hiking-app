@@ -17,36 +17,39 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
-        // Find toolbars by ID
-        Toolbar guestToolbar = findViewById(R.id.guestToolbar);
-        Toolbar userToolbar = findViewById(R.id.userToolbar);
-
-        // Enable the correct toolbar based on if the user is active
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        setContentView(R.layout.activity_main);
 
 
-        // Set the toolbar as the action bar
-        if (currentUser != null) {
-            userToolbar.setVisibility(View.VISIBLE);
-        } else {
-            guestToolbar.setVisibility(View.VISIBLE);
-        }
-
-        View placeholderText = findViewById(R.id.mainContainer);
-        ConstraintLayout constraintLayout = findViewById(R.id.main);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-
-        if (currentUser != null) {
-            constraintSet.connect(placeholderText.getId(), ConstraintSet.TOP, userToolbar.getId(), ConstraintSet.BOTTOM);
-        } else {
-            constraintSet.connect(placeholderText.getId(), ConstraintSet.TOP, guestToolbar.getId(), ConstraintSet.BOTTOM);
-        }
-
-        // Apply the updated constraints
-        constraintSet.applyTo(constraintLayout);
+//        // Find toolbars by ID
+//        Toolbar guestToolbar = findViewById(R.id.guestToolbar);
+//        Toolbar userToolbar = findViewById(R.id.userToolbar);
+//
+//        // Enable the correct toolbar based on if the user is active
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//
+//        // Set the toolbar as the action bar
+//        if (currentUser != null) {
+//            userToolbar.setVisibility(View.VISIBLE);
+//        } else {
+//            guestToolbar.setVisibility(View.VISIBLE);
+//        }
+//
+//        View placeholderText = findViewById(R.id.mainContainer);
+//        ConstraintLayout constraintLayout = findViewById(R.id.main);
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(constraintLayout);
+//
+//        if (currentUser != null) {
+//            constraintSet.connect(placeholderText.getId(), ConstraintSet.TOP, userToolbar.getId(), ConstraintSet.BOTTOM);
+//        } else {
+//            constraintSet.connect(placeholderText.getId(), ConstraintSet.TOP, guestToolbar.getId(), ConstraintSet.BOTTOM);
+//        }
+//
+//        // Apply the updated constraints
+//        constraintSet.applyTo(constraintLayout);
     }
 }
