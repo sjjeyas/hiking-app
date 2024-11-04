@@ -12,7 +12,7 @@ public class Trail {
     public String description;
     public List<Review> reviews;
 
-    Trail(String n, String l, String d){
+    public Trail(String n, String l, String d){
         this.name = n;
         this.location = l;
         this.description = d;
@@ -20,5 +20,9 @@ public class Trail {
         this.quality = 0;
         this.zipcode = 0;
         this.reviews = Collections.emptyList();
+    }
+
+    public Trail() {
+
     }
 }
