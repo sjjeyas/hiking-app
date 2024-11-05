@@ -1,14 +1,15 @@
 package com.example.project.classes;
+import java.util.HashMap;
 import java.util.List;
 
 public class Group {
     public String name;
-    public List<String> members;
+    public HashMap<String, Object> members;
     public String trail;
 
     public Group(String n, String r, String t){
         name = n;
-        members.add(r);
+        members.put(r, true);
         trail = t;
     }
     public Group(){
@@ -16,7 +17,7 @@ public class Group {
     }
 
     void joinGroup(String r){
-        members.add(r);
+        members.put(r, true);
     }
     void leaveGroup (String r){
         members.remove(r);

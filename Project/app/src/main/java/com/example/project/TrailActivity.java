@@ -30,6 +30,12 @@ import com.google.firebase.storage.StorageReference;
 
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
+    private String trail = "Aimee's Loop";
+
+    /*
+    public TrailActivity(String n){
+        trail = n;
+    } */
 
     public void writeNewTrail(String name, String location, String description){
         Trail t = new Trail(name, location, description);
@@ -49,7 +55,7 @@ public class TrailActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         Log.d("MyActivity", "This is a debug message!");
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
-        mDatabase.child("Aimee's Loop").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child(trail ).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
