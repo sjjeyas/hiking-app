@@ -3,6 +3,9 @@ plugins {
 
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
 }
 
 android {
@@ -34,6 +37,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -58,5 +62,11 @@ dependencies {
 
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+
+    // Maps SDK for Android
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
 
 }

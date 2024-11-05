@@ -58,13 +58,24 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/mainContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:textSize="32sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- FragmentContainerView to hold the map fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mapFragmentContainer"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
