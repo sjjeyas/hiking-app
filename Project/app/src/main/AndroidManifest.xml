@@ -25,6 +25,12 @@
             android:exported="false"/>
         <activity android:name=".SignUpActivity"
             android:exported="false"/>
+        <activity android:name=".TrailActivity"
+            android:exported="true"/>
+        <activity android:name=".GroupActivity"
+            android:exported="true"/>
+        <activity android:name=".FriendsActivity"
+            android:exported="true"/>
 
     </application>
 

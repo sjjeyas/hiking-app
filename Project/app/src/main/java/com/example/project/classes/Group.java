@@ -3,19 +3,22 @@ import java.util.List;
 
 public class Group {
     public String name;
-    public List<Registered> rUser;
-    public Trail trail;
+    public List<String> members;
+    public String trail;
 
-    Group(String n, Registered r, Trail t){
+    public Group(String n, String r, String t){
         name = n;
-        rUser.add(r);
+        members.add(r);
         trail = t;
     }
+    public Group(){
 
-    void joinGroup(Registered r){
-        rUser.add(r);
     }
-    void leaveGroup (Registered r){
-        rUser.remove(r);
+
+    void joinGroup(String r){
+        members.add(r);
+    }
+    void leaveGroup (String r){
+        members.remove(r);
     }
 }

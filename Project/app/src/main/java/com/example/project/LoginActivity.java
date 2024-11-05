@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
     private Button submit;
-    private TextView register;
+    private Button register;
 
     private FirebaseAuth mAuth;
 
@@ -43,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.editusername);
         passwordTextView = findViewById(R.id.editPassword);
-        submit = findViewById(R.id.login_button);
-        register = findViewById(R.id.signup_text);
+        //submit = findViewById(R.id.submit_button);
+        //register = findViewById(R.id.signup_button);
 
         // Set on Click Listener on Sign-in button
         submit.setOnClickListener(new View.OnClickListener() {

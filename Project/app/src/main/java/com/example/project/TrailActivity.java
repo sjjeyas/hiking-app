@@ -11,10 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.project.classes.Registered;
 import com.example.project.classes.Trail;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,23 +25,31 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class TrailActivity extends AppCompatActivity {
+    private DatabaseReference mDatabase;
+
+    public void writeNewTrail(String name, String location, String description){
+        Trail t = new Trail(name, location, description);
+        mDatabase.child("trails").child(name).setValue(t)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "Trail added successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Error adding trail", e);
+                });
+    }
     // Access a Cloud Firestore instance from your Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trail);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("93");
-        Log.d("CREATE", myRef.get().toString());
-        myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FirebaseApp.initializeApp(this);
+        Log.d("MyActivity", "This is a debug message!");
+        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
+        mDatabase.child("Aimee's Loop").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

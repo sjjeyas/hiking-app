@@ -1,6 +1,9 @@
 package com.example.project.classes;
 
+import com.google.protobuf.Empty;
+
 import java.util.List;
+
 
 public class Registered {
     public String username;
@@ -36,7 +39,13 @@ public class Registered {
         username = u;
     }
 
-    Group createGroup(Trail l, String name){
-        return new Group(name, this, l);
+    public Registered(String u){
+        username = u;
+        trails = null;
+        friends = null;
+        profilePic = null;
+    }
+    Group createGroup(String name, String location){
+        return new Group(name, location, this.username);
     }
 }
