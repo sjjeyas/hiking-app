@@ -54,12 +54,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createUserAccount();
-            }
-        });
 
     }
 
@@ -126,46 +120,5 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
-    }
-
-    private void createUserAccount() {
-        String email, password;
-        email = emailTextView.getText().toString();
-        password = passwordTextView.getText().toString();
-
-        // validations for input email and password
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(),
-                            "Please enter email!!",
-                            Toast.LENGTH_LONG)
-                    .show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(),
-                            "Please enter password!!",
-                            Toast.LENGTH_LONG)
-                    .show();
-            return;
-        }
-
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // User created successfully
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(getApplicationContext(), "User created: " + user.getUid(), Toast.LENGTH_LONG)
-                                        .show();
-                        return;
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Exception exception = task.getException();
-                        Toast.makeText(getApplicationContext(),"Error: " + exception.getMessage(), Toast.LENGTH_LONG)
-                                .show();
-                        return;
-                    }
-                });
     }
 }

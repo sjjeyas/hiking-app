@@ -24,10 +24,10 @@ import java.util.Map;
 
 public class addReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Antelope Trail South Loop";
+    private String trail = "Bear Gulch Cave Trail";
     private Button submit;
     private Button back;
-    private String user = "sneha";
+    private String user = "nicole";
     private TextView reviewTextView;
 
     @Override

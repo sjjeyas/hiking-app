@@ -33,11 +33,16 @@ public class GroupActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         Log.d("GroupActivity", "This is a debug message!");
         mDatabase = FirebaseDatabase.getInstance().getReference("groups");
-        /*
-        HashMap<String, Object> members = new EmptyHashMap<String, Object>;
-        Group g = new Group ("USC Peaks", "sneha", "Mt.Hood");
+
+        HashMap<String, Object> data = new HashMap<String,Object>();
+        HashMap<String, Object> members = new HashMap<String,Object>();
+        members.put("sneha", true);
+        members.put("nicole", true);
+        data.put("trail", "Aimee's Loop");
+        data.put("name", "NewGroup");
+        data.put("members", members);
         Log.d("GroupActivity", "Write error");
-        mDatabase.child("USC Peaks").setValue(g).addOnSuccessListener(new OnSuccessListener<Void>() {
+        mDatabase.child("NewGroup").setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("GroupActivity", "Write Successful");
@@ -49,9 +54,10 @@ public class GroupActivity extends AppCompatActivity {
                         Log.d("GroupActivity", "Write failure");
                     }
                 });
-        */
 
-        mDatabase.child("USC Peaks").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+
+
+        mDatabase.child("NewGroup").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -82,6 +88,9 @@ public class GroupActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
 
 

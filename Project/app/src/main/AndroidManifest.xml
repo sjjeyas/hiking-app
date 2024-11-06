@@ -22,9 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity"
-            android:exported="false"/>
+            android:exported="true"/>
         <activity android:name=".SignUpActivity"
-            android:exported="false"/>
+            android:exported="true"/>
         <activity android:name=".TrailActivity"
             android:exported="true"/>
         <activity android:name=".GroupActivity"

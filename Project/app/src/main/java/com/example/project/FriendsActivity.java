@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user = "chao wang";
+    private String user = "sneha";
     /*
     public FriendsActivity(String username){
         user = username;
