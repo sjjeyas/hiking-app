@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendsActivity"
+    tools:context=".ProfileActivity"
     android:background="@color/sand">
 
 
@@ -34,29 +34,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/user"
-        android:layout_width="301dp"
-        android:layout_height="76dp"
-        android:text="placeholder"
-        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show review page"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.063" />
-
-    <TextView
-        android:id="@+id/friendslist"
-        android:layout_width="292dp"
-        android:layout_height="262dp"
-        android:text="placeholder"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.317" />
+        app:layout_constraintVertical_bias="0.145" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

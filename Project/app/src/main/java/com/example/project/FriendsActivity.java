@@ -44,7 +44,10 @@ public class FriendsActivity extends AppCompatActivity {
         mDatabase.child("chao wang").setValue(data);
         mDatabase.child("chao wang").child("friends").setValue(friends);
          */
+
         //THIS CODE ACCESSES AND READS FRIENDS
+        TextView username = findViewById(R.id.user);
+        username.setText(String.valueOf(user + "'s Friends"));
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
         mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override

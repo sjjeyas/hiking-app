@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class GroupActivity extends AppCompatActivity {
@@ -69,7 +70,12 @@ public class GroupActivity extends AppCompatActivity {
                         TextView users = findViewById(R.id.userlist);
                         name.setText(g.name);
                         location.setText(g.trail);
-                        users.setText(String.valueOf( g.members));
+                        String r = "";
+                        Set<String> keys = g.members.keySet();
+                        for (String k : g.members.keySet()){
+                            r += k + "\n";
+                        }
+                        users.setText(r);
                     } else {
                         Log.d("GroupActivity", "No trail found");
                     }

@@ -33,6 +33,10 @@
             android:exported="true"/>
         <activity android:name=".ProfileActivity"
             android:exported="true"/>
+        <activity android:name=".addReviewActivity"
+            android:exported="true"/>
+        <activity android:name=".showReviewActivity"
+            android:exported="true"/>
 
     </application>
 
