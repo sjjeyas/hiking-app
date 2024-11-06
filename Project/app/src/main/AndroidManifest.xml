@@ -22,9 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity android:name=".SignUpActivity"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity android:name=".TrailActivity"
             android:exported="true"/>
         <activity android:name=".GroupActivity"
@@ -38,7 +38,16 @@
         <activity android:name=".showReviewActivity"
             android:exported="true"/>
 
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCAlr5ZKDQoLaN_1FMT8ISaXWDeECPTKJg" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
 </manifest>

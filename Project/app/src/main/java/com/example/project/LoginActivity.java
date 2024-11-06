@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
     private Button submit;
-    private Button register;
+    private TextView register;
 
     private FirebaseAuth mAuth;
 
@@ -43,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.editusername);
         passwordTextView = findViewById(R.id.editPassword);
-        //submit = findViewById(R.id.submit_button);
-        //register = findViewById(R.id.signup_button);
+        submit = findViewById(R.id.login_button);
+        register = findViewById(R.id.signup_text);
 
         // Set on Click Listener on Sign-in button
         submit.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +54,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createUserAccount();
+            }
+        });
 
     }
 
@@ -120,5 +126,46 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
+    }
+
+    private void createUserAccount() {
+        String email, password;
+        email = emailTextView.getText().toString();
+        password = passwordTextView.getText().toString();
+
+        // validations for input email and password
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getApplicationContext(),
+                            "Please enter email!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(),
+                            "Please enter password!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // User created successfully
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(getApplicationContext(), "User created: " + user.getUid(), Toast.LENGTH_LONG)
+                                .show();
+                        return;
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Exception exception = task.getException();
+                        Toast.makeText(getApplicationContext(),"Error: " + exception.getMessage(), Toast.LENGTH_LONG)
+                                .show();
+                        return;
+                    }
+                });
     }
 }
