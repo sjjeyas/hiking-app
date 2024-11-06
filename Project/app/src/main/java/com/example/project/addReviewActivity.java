@@ -25,10 +25,11 @@ import java.util.Set;
 
 public class addReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
+    private TextView addReviewView;
     private String trail = "Bear Gulch Cave Trail";
     private Button submit;
     private Button back;
-    private String user = "sneha";
+    private String user = "zaynmalik";
     private TextView reviewTextView;
 
     @Override
@@ -38,6 +39,9 @@ public class addReviewActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         Log.d("addReviewActivity", "This is a debug message!");
         reviewTextView = findViewById(R.id.editreview);
+        addReviewView = findViewById(R.id.addreview);
+        String title = "Add Review: "+trail;
+        addReviewView.setText(title);
         submit = findViewById(R.id.sendreview_button);
         back = findViewById(R.id.back_button);
         mDatabase= FirebaseDatabase.getInstance().getReference("trails");
@@ -81,7 +85,7 @@ public class addReviewActivity extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 Log.e("addReviewActivity", "Error adding review", e);
                             });
-                    //i
+                    //
                 }
             }
         });
