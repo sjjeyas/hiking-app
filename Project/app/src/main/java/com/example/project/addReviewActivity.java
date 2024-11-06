@@ -1,8 +1,12 @@
 package com.example.project;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +19,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class addReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Aimee's Loop";
+    private String trail = "Antelope Trail South Loop";
+    private Button submit;
+    private Button back;
+    private String user = "sneha";
+    private TextView reviewTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,35 +36,40 @@ public class addReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addreview);
         FirebaseApp.initializeApp(this);
         Log.d("addReviewActivity", "This is a debug message!");
-        /*
-        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
-        mDatabase.child(trail ).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        reviewTextView = findViewById(R.id.editreview);
+        submit = findViewById(R.id.sendreview_button);
+        back = findViewById(R.id.back_button);
+        mDatabase= FirebaseDatabase.getInstance().getReference("trails");
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                    DataSnapshot ds = task.getResult();
-                    Object result = ds.getValue();
-                    assert result != null;
-                    Trail newTrail = ds.getValue(Trail.class);
-                    if (newTrail != null) {
-                        Log.d("firebase", "Loaded trail: " + newTrail.name);
-                        TextView name = findViewById(R.id.trailname);
-                        TextView description = findViewById(R.id.traildescription);
-                        TextView location = findViewById(R.id.traillocation);
-                        name.setText(newTrail.name);
-                        description.setText(newTrail.description);
-                        location.setText(newTrail.location);
-                    } else {
-                        Log.d("firebase", "No trail found");
-                    }
-                }
+            public void onClick(View v) {
+                writeReview();
             }
         });
-         */
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backToTrail();
+            }
+        });
+    }
+
+    private void writeReview(){
+        Map<String, String> data = new HashMap<>();
+        String review = reviewTextView.getText().toString();
+        data.put(user, review);
+        Log.d("addReviewActivity", review);
+        mDatabase.child(trail).child("reviews").setValue(data)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("addReviewActivity", "Review added successfully");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("addReviewActivity", "Error adding review", e);
+                        });
+    }
+
+    private void backToTrail(){
 
     }
 }
