@@ -71,10 +71,72 @@
 
         <!-- FragmentContainerView to hold the map fragment -->
         <androidx.fragment.app.FragmentContainerView
+            android:layout_marginTop="100dp"
             android:id="@+id/mapFragmentContainer"
             android:layout_width="350dp"
-            android:layout_height="400dp"
+            android:layout_height="350dp"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:id="@+id/zipSearch">
+
+            <TextView
+                android:id="@+id/ziptext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:text="Zipcode"
+                android:textColor="@color/brown"
+                android:gravity="center_vertical"
+                android:textSize="15sp"/>
+
+            <EditText
+                android:id="@+id/editZip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".9"
+                android:ems="15"
+                android:backgroundTint="@color/brown"
+                android:inputType="text"
+                android:textSize="15sp" />
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:id="@+id/buttons"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/brown"
+                android:text="Search"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/default_location"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:background="@color/brown"
+                android:text="Current Location"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
