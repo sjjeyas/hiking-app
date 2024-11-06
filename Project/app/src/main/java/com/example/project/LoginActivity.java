@@ -1,4 +1,7 @@
 package com.example.project;
+import static android.content.Intent.*;
+import static com.google.firebase.auth.AuthKt.getAuth;
+
 import android.os.Bundle;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -40,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.editusername);
         passwordTextView = findViewById(R.id.editPassword);
-        submit = findViewById(R.id.submit_button);
-        register = findViewById(R.id.signup_button);
+        //submit = findViewById(R.id.submit_button);
+        //register = findViewById(R.id.signup_button);
 
         // Set on Click Listener on Sign-in button
         submit.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +108,13 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent intent
                                             = new Intent(LoginActivity.this,
                                             MainActivity.class);
+//                                    const auth = getAuth();
+//                                    const user = auth.currentUser
+                                    String userID ="";
+                                    userID = FirebaseAuth.getInstance().getUid();
+                                    intent.putExtra("user", userID);
                                     startActivity(intent);
+
                                 } else {
 
                                     // sign-in failed
