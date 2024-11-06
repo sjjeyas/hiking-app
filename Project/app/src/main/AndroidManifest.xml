@@ -31,6 +31,8 @@
             android:exported="true"/>
         <activity android:name=".FriendsActivity"
             android:exported="true"/>
+        <activity android:name=".ProfileActivity"
+            android:exported="true"/>
 
     </application>
 

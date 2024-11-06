@@ -21,13 +21,30 @@ import java.util.Set;
 
 public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user = "sneha";
+    private String user = "chao wang";
+    /*
+    public FriendsActivity(String username){
+        user = username;
+    }
+    */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         FirebaseApp.initializeApp(this);
         Log.d("FriendsActivity", "This is a debug message!");
+        /*
+        THIS CODE ADDS A USER AND THEIR FRIENDS
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        Map<String, String> data = new HashMap<>();
+        Map<String, String> friends = new HashMap<>();
+        data.put("username", "chao wang");
+        friends.put("nicole", "true");
+        mDatabase.child("chao wang").setValue(data);
+        mDatabase.child("chao wang").child("friends").setValue(friends);
+         */
+        //THIS CODE ACCESSES AND READS FRIENDS
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
         mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -53,27 +70,5 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-        mDatabase.child("maria").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                    DataSnapshot ds = task.getResult();
-                    Object result = ds.getValue();
-                    assert result != null;
-                    String friend = ds.getValue(String.class);
-                    if (friend != null) {
-                        Log.d("firebase", "Loaded friend: " + friend);
-                    } else {
-                        Log.d("firebase", "No friend found");
-                    }
-                }
-            }
-        });
-
-         */
     }
 }
