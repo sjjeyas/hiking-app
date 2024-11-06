@@ -7,9 +7,12 @@ import java.util.List;
 
 public class Registered {
     public String username;
-    private List<TrailsList> trails;
-    private List<Registered> friends;
-    private String profilePic;
+    private String name;
+    //private List<TrailsList> trails;
+    //private List<Registered> friends;
+    //private String profilePic;
+    private String location;
+    /*
 
     void changePic(String path){
         this.profilePic = path;
@@ -27,6 +30,8 @@ public class Registered {
         trails.remove(t);
     }
 
+
+
     void addFriend(Registered r){
         friends.add(r);
     }
@@ -35,16 +40,22 @@ public class Registered {
         friends.remove(r);
     }
 
+     */
+
     void changeUsername(String u){
         username = u;
     }
 
     public Registered(String u){
         username = u;
-        trails = null;
-        friends = null;
-        profilePic = null;
+        //trails = null;
+        //friends = null;
+        //profilePic = null;
     }
+    public Registered(){
+
+    }
+
     Group createGroup(String name, String location){
         return new Group(name, location, this.username);
     }
