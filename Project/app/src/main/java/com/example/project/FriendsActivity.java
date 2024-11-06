@@ -34,6 +34,39 @@ public class FriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends);
         FirebaseApp.initializeApp(this);
         Log.d("FriendsActivity", "This is a debug message!");
+        TextView username = findViewById(R.id.user);
+        username.setText(String.valueOf(user + "'s Friends"));
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("FriendsActivity", "Error getting data", task.getException());
+                } else {
+                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
+                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
+                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
+                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
+                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                    results.put("fazle", true);
+                    mDatabase.child(user).child("friends").setValue(results);
+                    //
+                    if (results != null) {
+                        Log.d("FriendsActivity", String.valueOf(results));
+                        String r = "";
+                        Set<String> keys = results.keySet();
+                        for (String k : results.keySet()){
+                            r += k + "\n";
+                        }
+                        TextView friendslist = findViewById(R.id.friendslist);
+                        friendslist.setText(r);
+                    } else {
+                        Log.d("FriendsActivity", "No friend found");
+                    }
+
+                }
+            }
+        });
         /*
         THIS CODE ADDS A USER AND THEIR FRIENDS
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
@@ -46,6 +79,7 @@ public class FriendsActivity extends AppCompatActivity {
          */
 
         //THIS CODE ACCESSES AND READS FRIENDS
+        /*
         TextView username = findViewById(R.id.user);
         username.setText(String.valueOf(user + "'s Friends"));
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
@@ -73,5 +107,7 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }
         });
+
+         */
     }
 }
