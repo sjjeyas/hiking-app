@@ -25,6 +25,18 @@
             android:exported="false"/>
         <activity android:name=".SignUpActivity"
             android:exported="false"/>
+        <activity android:name=".TrailActivity"
+            android:exported="true"/>
+        <activity android:name=".GroupActivity"
+            android:exported="true"/>
+        <activity android:name=".FriendsActivity"
+            android:exported="true"/>
+        <activity android:name=".ProfileActivity"
+            android:exported="true"/>
+        <activity android:name=".addReviewActivity"
+            android:exported="true"/>
+        <activity android:name=".showReviewActivity"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
