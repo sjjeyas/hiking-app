@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
     private Button submit;
-    private Button register;
+    private TextView register;
 
     private FirebaseAuth mAuth;
 
@@ -43,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.editusername);
         passwordTextView = findViewById(R.id.editPassword);
-        submit = findViewById(R.id.submit_button);
-        register = findViewById(R.id.signup_button);
+        submit = findViewById(R.id.login_button);
+        register = findViewById(R.id.signup_text);
 
         // Set on Click Listener on Sign-in button
         submit.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                         // User created successfully
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(getApplicationContext(), "User created: " + user.getUid(), Toast.LENGTH_LONG)
-                                        .show();
+                                .show();
                         return;
                     } else {
                         // If sign in fails, display a message to the user.
