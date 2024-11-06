@@ -1,11 +1,12 @@
 package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 
@@ -14,16 +15,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    Intent intent = getIntent();
-    String UID = intent.getStringExtra("UID");
+//    Intent intent = getIntent();
+//    String UID = intent.getStringExtra("UID");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_login);
-        setContentView(R.layout.activity_trail);
-
+//        setContentView(R.layout.activity_login);
+//        setContentView(R.layout.activity_search);
 //        setContentView(R.layout.activity_main);
+        Intent intent = new Intent(MainActivity.this, TrailActivity.class);
+        startActivity(intent);
+
 
 
 //        // Find toolbars by ID

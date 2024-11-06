@@ -8,7 +8,6 @@
     tools:context=".SearchActivity"
     android:background="@color/sand">
 
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -16,6 +15,8 @@
         android:background="@color/dark_green"
         android:elevation="@dimen/cardview_default_elevation"
         android:theme="@style/Theme.Project"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,37 +24,37 @@
         app:menu="@menu/navbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="start"-->
+<!--            android:text="@string/app_name"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="25sp"-->
+<!--            />-->
 
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/searchBar"
-        android:layout_width="336dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="28dp"
-        android:background="#6C5434"
-        android:ems="10"
-        android:inputType="text"
-        android:padding="25px"
-        android:text="Search"
-        android:textColor="#FFFFFF"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/brown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        android:queryHint="Search here"
+        />
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="604dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="126dp"></LinearLayout>
+    <ListView
+        android:id="@+id/searchList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
