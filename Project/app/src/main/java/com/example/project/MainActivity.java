@@ -299,6 +299,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;
+//        } else if (id == R.id.action_home) {
+//            Log.d("MainActivity", "Home button clicked");
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivity(intent);
+//            return true;
+        } else if (id == R.id.action_profile) {
+            Log.d("MainActivity", "Profile button clicked");
+            Intent intent = new Intent(this, ProfileActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_trailsearch) {
+            Log.d("MainActivity", "Search button clicked");
+            Intent intent = new Intent(this, SearchActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_friends) {
+            Log.d("MainActivity", "Friends button clicked");
+            Intent intent = new Intent(this, FriendsActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_groupsearch) {
+            Log.d("MainActivity", "Groups button clicked");
+            Intent intent = new Intent(this, GroupActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
