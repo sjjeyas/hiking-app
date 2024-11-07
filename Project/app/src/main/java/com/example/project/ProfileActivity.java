@@ -59,6 +59,10 @@ public class ProfileActivity  extends AppCompatActivity {
             }
         });
 
+        String t = getIntent().getStringExtra("user");
+        if (t != null){
+            user = t;
+        }
 
         userView = findViewById(R.id.usernamefield);
         zipView = findViewById(R.id.locationfield);

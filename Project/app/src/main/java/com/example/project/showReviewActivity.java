@@ -42,6 +42,11 @@ public class showReviewActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
+    private void backToTrail(){
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +110,11 @@ public class showReviewActivity extends AppCompatActivity {
         });
     }
 
-    private void backToTrail(){
-        Intent intent = new Intent(this, TrailActivity.class);
-        intent.putExtra("trailname", trail);
-        startActivity(intent);
-    }
+//    private void backToTrail(){
+//        Intent intent = new Intent(this, TrailActivity.class);
+//        intent.putExtra("trailname", trail);
+//        startActivity(intent);
+//    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource
@@ -176,4 +181,5 @@ public class showReviewActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
