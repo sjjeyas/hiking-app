@@ -35,6 +35,11 @@ public class showReviewActivity extends AppCompatActivity {
     private TextView reviews;
     private Button back;
 
+    private void backToTrail(){
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +97,5 @@ public class showReviewActivity extends AppCompatActivity {
         });
     }
 
-    private void backToTrail(){
-        Intent intent = new Intent(this, TrailActivity.class);
-        intent.putExtra("trailname", trail);
-        startActivity(intent);
-    }
+
 }

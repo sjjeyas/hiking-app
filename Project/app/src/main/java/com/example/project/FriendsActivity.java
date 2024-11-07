@@ -1,7 +1,10 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,13 @@ import java.util.Set;
 public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String user;
+    private Button back;
+
+    private void backToProfile(){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("user", (String)user);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -36,6 +46,16 @@ public class FriendsActivity extends AppCompatActivity {
         }else{
             user = "sneha";
         }
+
+        back = (Button)findViewById(R.id.back_button);
+        back.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("addReviewActivity", "go back button pushed");
+                backToProfile();
+            }
+        });
+
         Log.d("FriendsActivity", user);
         TextView username = findViewById(R.id.user);
         username.setText(String.valueOf(user + "'s Friends"));

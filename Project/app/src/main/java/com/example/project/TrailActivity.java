@@ -33,7 +33,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Aimee's Loop";
+    private String trail;
     private Button seereview;
     private Button addreview;
 
@@ -54,6 +54,18 @@ public class TrailActivity extends AppCompatActivity {
                 });
     }*/
 
+    public void addReview(){
+        Intent intent = new Intent(this, addReviewActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
+
+    public void seeReview(){
+        Intent intent = new Intent(this, showReviewActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
+
 
 
     // Access a Cloud Firestore instance from your Activity
@@ -62,44 +74,46 @@ public class TrailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trail);
         String t = getIntent().getStringExtra("trailname");
-        if (t != null) {
-            Log.d("TrailActivity", t);
-            trail =  t;
+        if (t != null){
+            trail = t;
+        }else {
+            trail = "Aimee's Loop";
         }
+
         addreview = (Button) findViewById(R.id.addreview_button);
         seereview = (Button) findViewById(R.id.seereview_button);
         seereview.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("addReviewActivity", "seereviews button pushed");
+                Log.d("TrailActivity", "seereviews button pushed");
                 seeReview();
             }
         });
         addreview.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("addReviewActivity", "seereviews button pushed");
+                Log.d("TrailActivity", "addreviews button pushed");
                 addReview();
             }
         });
 
         FirebaseApp.initializeApp(this);
-        Log.d("MyActivity", "This is a debug message!");
+        Log.d("TrailActivity", "This is a debug message!");
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
         mDatabase.child(trail ).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
+                    Log.e("TrailActivity", "Error getting data", task.getException());
                 }
                 else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                    Log.d("TrailActivity", String.valueOf(task.getResult().getValue()));
                     DataSnapshot ds = task.getResult();
                     Object result = ds.getValue();
                     assert result != null;
                     Trail newTrail = ds.getValue(Trail.class);
                     if (newTrail != null) {
-                        Log.d("firebase", "Loaded trail: " + newTrail.name);
+                        Log.d("TrailActivity", "Loaded trail: " + newTrail.name);
                         TextView name = findViewById(R.id.trailname);
                         TextView description = findViewById(R.id.traildescription);
                         TextView location = findViewById(R.id.traillocation);
@@ -112,18 +126,6 @@ public class TrailActivity extends AppCompatActivity {
                 }
             }
         });
-
-    }
-    public void addReview(){
-        Intent intent = new Intent(this, addReviewActivity.class);
-        intent.putExtra("trailname", trail);
-        startActivity(intent);
-    }
-
-    public void seeReview(){
-        Intent intent = new Intent(this, showReviewActivity.class);
-        intent.putExtra("trailname", trail);
-        startActivity(intent);
     }
 
 }

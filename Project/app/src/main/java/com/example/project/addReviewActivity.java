@@ -27,11 +27,17 @@ import java.util.Set;
 public class addReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private TextView addReviewView;
-    private String trail = "Bear Gulch Cave Trail";
+    private String trail;
     private Button submit;
     private Button back;
     private String user = "zaynmalik";
     private TextView reviewTextView;
+
+    private void backToTrail(){
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,8 @@ public class addReviewActivity extends AppCompatActivity {
         String t = getIntent().getStringExtra("trailname");
         if (t != null){
             trail = t;
+        }else{
+            trail = "Aimee's Loop";
         }
         String title = "Add Review: "+trail;
         addReviewView.setText(title);
@@ -61,6 +69,7 @@ public class addReviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 writeReview();
+                backToTrail();
             }
         });
 
@@ -88,6 +97,7 @@ public class addReviewActivity extends AppCompatActivity {
                     mDatabase.child(trail).child("reviews").setValue(results)
                             .addOnSuccessListener(aVoid -> {
                                 Log.d("addReviewActivity", "Review added successfully");
+
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("addReviewActivity", "Error adding review", e);
@@ -96,12 +106,7 @@ public class addReviewActivity extends AppCompatActivity {
                 }
             }
         });
-        backToTrail();
     }
 
-    private void backToTrail(){
-        Intent intent = new Intent(this, TrailActivity.class);
-        intent.putExtra("trailname", trail);
-        startActivity(intent);
-    }
+
 }
