@@ -32,7 +32,11 @@
         <activity android:name=".FriendsActivity"
             android:exported="true"/>
         <activity android:name=".ProfileActivity"
-            android:exported="true"/>
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".editProfileActivity"
             android:exported="true"/>
         <activity android:name=".addReviewActivity"
