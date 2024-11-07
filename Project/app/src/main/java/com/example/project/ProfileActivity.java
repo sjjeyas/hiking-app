@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class ProfileActivity  extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user = "orange";
+    private String user = "zaynmalik";
     private TextView zipView;
     private TextView userView;
     private TextView nameView;
@@ -36,7 +36,6 @@ public class ProfileActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         FirebaseApp.initializeApp(this);
         Log.d("ProfileActivity", "This is a debug message!");
-
         friends = (Button) findViewById(R.id.friends_button);
         friends.setOnClickListener(new View.OnClickListener() {
             @Override

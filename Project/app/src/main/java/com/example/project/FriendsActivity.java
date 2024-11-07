@@ -21,22 +21,22 @@ import java.util.Set;
 
 public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user = "nicole";
+    private String user;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
         FirebaseApp.initializeApp(this);
+        setContentView(R.layout.activity_friends);
         Log.d("FriendsActivity", "This is a debug message!");
         String u = getIntent().getStringExtra("user");
-        Log.d("FriendsActivity", user);
         if (u != null){
             user = String.valueOf(u);
         }else{
             user = "sneha";
         }
+        Log.d("FriendsActivity", user);
         TextView username = findViewById(R.id.user);
         username.setText(String.valueOf(user + "'s Friends"));
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
