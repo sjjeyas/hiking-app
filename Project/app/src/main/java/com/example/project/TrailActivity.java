@@ -30,13 +30,11 @@ import com.google.firebase.storage.StorageReference;
 
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Aimee's Loop";
-
+    private String trail = "";
     /*
     public TrailActivity(String n){
         trail = n;
     }
-
     public void writeNewTrail(String name, String location, String description){
         Trail t = new Trail(name, location, description);
         mDatabase.child("trails").child(name).setValue(t)
@@ -48,12 +46,16 @@ public class TrailActivity extends AppCompatActivity {
                 });
     }*/
 
-
     // Access a Cloud Firestore instance from your Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trail);
+//        private String trail = "Aimee's Loop";
+        trail = getIntent().getStringExtra("trailName");
+        Log.d("TrailActivity", (trail + "passed through."));
+
+
         FirebaseApp.initializeApp(this);
         Log.d("MyActivity", "This is a debug message!");
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
@@ -83,7 +85,5 @@ public class TrailActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
 }

@@ -22,8 +22,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -35,18 +36,15 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-
         FirebaseApp.initializeApp(this);
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
-
-        Log.d("SearchActivity", "OnCreate() called");
 
         fetchTrailListFromFirebase();
 
         ListView searchList = findViewById(R.id.searchList);
-        trailAdapter = new TrailAdapter(this, trailList);
+
+        trailAdapter = new TrailAdapter(this, new ArrayList<>());
         searchList.setAdapter(trailAdapter);
-        Log.d("SearchActivity", "Adapter set with trailList of size: " + trailAdapter.getCount());
 
         SearchView sv = findViewById(R.id.searchView);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -69,16 +67,16 @@ public class SearchActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 trailList.clear();
 
-                // Loop through each child node in "trails"
                 for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
-                    // Convert each entry to a Trail object
-                    Trail trail = trailSnapshot.getValue(Trail.class);
+                    HashMap<String, String> trailMap = (HashMap<String, String>) trailSnapshot.getValue();
+                    Trail trail = new Trail (trailMap.get("name"), trailMap.get("location"), trailMap.get("description"));
+
                     if (trail != null) {
-                        trailList.add(trail);
+                            trailList.add(trail);
                     }
                 }
 
-                trailAdapter.notifyDataSetChanged();
+                trailAdapter.updateData(trailList);  // Update the adapter with the new data
                 Log.d("SearchActivity", "Loaded trails from Firebase: " + trailList.size());
             }
 
@@ -88,35 +86,6 @@ public class SearchActivity extends AppCompatActivity {
                 Toast.makeText(SearchActivity.this, "Failed to load trails.", Toast.LENGTH_SHORT).show();
             }
         });
-        Log.d("SearchActivity", "fetched trails from Firebase");
-
-//        // Listen for changes to the "trails" node
-//        mDatabase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                // Clear the previous list to avoid duplicates
-//                trailList.clear();
-//
-//                // Loop through the data snapshot and get each trail
-//                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
-//                    Trail trail = trailSnapshot.getValue(Trail.class);
-//                    if (trail != null) {
-//                        trailList.add(trail);
-//                    }
-//                }
-//
-//                // Notify the adapter that the data has changed
-//                trailAdapter.notifyDataSetChanged();
-//                Log.d("SearchActivity", "Loaded trails from Firebase: " + trailList.size());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.w("SearchActivity", "loadPost:onCancelled", databaseError.toException());
-//                Toast.makeText(SearchActivity.this, "Failed to load trails.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        Log.d("SearchActivity", "fetched trails from Firebase");
     }
 
 }

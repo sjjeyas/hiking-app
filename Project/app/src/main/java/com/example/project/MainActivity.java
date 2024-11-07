@@ -23,11 +23,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_login);
 //        setContentView(R.layout.activity_search);
-//        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+
         Intent intent = new Intent(MainActivity.this, SearchActivity.class);
         startActivity(intent);
-
-
 
 //        // Find toolbars by ID
 //        Toolbar guestToolbar = findViewById(R.id.guestToolbar);
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 //        // Enable the correct toolbar based on if the user is active
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 //        FirebaseUser currentUser = mAuth.getCurrentUser();
-//
 //
 //        // Set the toolbar as the action bar
 //        if (currentUser != null) {

@@ -1,6 +1,7 @@
 package com.example.project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import com.example.project.classes.Trail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TrailAdapter extends ArrayAdapter<Trail> {
@@ -22,8 +24,16 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
 
     public TrailAdapter(Context context, List<Trail> trails) {
         super(context, 0, trails);
-        this.originalTrails = trails;
-        this.filteredTrails = new ArrayList<>(trails); // Initialize with all trails
+        this.originalTrails = new ArrayList<>(trails);
+        this.filteredTrails = new ArrayList<>(trails);
+    }
+
+    public void updateData(List<Trail> trails) {
+        this.originalTrails.clear();
+        this.originalTrails.addAll(trails);
+        this.filteredTrails.clear();
+        this.filteredTrails.addAll(trails);
+        notifyDataSetChanged();  // Notify adapter to refresh the list view
     }
 
     @NonNull
@@ -34,7 +44,6 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
         }
 
         Trail trail = getItem(position);
-
         if (trail != null) {
             TextView trailName = convertView.findViewById(R.id.trailName);
             TextView trailLocation = convertView.findViewById(R.id.trailLocation);
@@ -45,11 +54,20 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
             trailLocation.setText(trail.getLocation());
             trailDescription.setText(trail.getDescription());
             trailRating.setText(trail.getDifficultyString());
-
-            Log.d("TrailAdapter", "Binding item at position: " + position + " with name: " + trail.getName());
         }
+
+        convertView.setOnClickListener(view -> {
+            Intent intent = new Intent(TrailAdapter.this.getContext(), TrailActivity.class);
+
+            // Pass trail information to the detail activity
+            assert trail != null;
+            intent.putExtra("trailName", trail.getName());
+
+            getContext().startActivity(intent);
+        });
         return convertView;
     }
+
     @Override
     public int getCount() {
         return filteredTrails.size();
@@ -69,11 +87,9 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
                 FilterResults results = new FilterResults();
 
                 if (constraint == null || constraint.length() == 0) {
-                    // If no filter, return the original list
                     results.values = originalTrails;
                     results.count = originalTrails.size();
                 } else {
-                    // Filter the list based on the trail name
                     List<Trail> filteredList = new ArrayList<>();
                     for (Trail trail : originalTrails) {
                         if (trail.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
@@ -89,11 +105,10 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                // Update the filtered list with the results
-                filteredTrails = (List<Trail>) results.values;
+                filteredTrails.clear();
+                filteredTrails.addAll((List<Trail>) results.values);
                 notifyDataSetChanged();
             }
         };
     }
-
 }
