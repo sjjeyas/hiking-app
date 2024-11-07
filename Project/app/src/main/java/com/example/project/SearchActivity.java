@@ -64,22 +64,20 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void fetchTrailListFromFirebase() {
-        // Listen for changes to the "trails" node
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Clear the previous list to avoid duplicates
                 trailList.clear();
 
-                // Loop through the data snapshot and get each trail
+                // Loop through each child node in "trails"
                 for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+                    // Convert each entry to a Trail object
                     Trail trail = trailSnapshot.getValue(Trail.class);
                     if (trail != null) {
                         trailList.add(trail);
                     }
                 }
 
-                // Notify the adapter that the data has changed
                 trailAdapter.notifyDataSetChanged();
                 Log.d("SearchActivity", "Loaded trails from Firebase: " + trailList.size());
             }
@@ -91,6 +89,34 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         Log.d("SearchActivity", "fetched trails from Firebase");
+
+//        // Listen for changes to the "trails" node
+//        mDatabase.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                // Clear the previous list to avoid duplicates
+//                trailList.clear();
+//
+//                // Loop through the data snapshot and get each trail
+//                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+//                    Trail trail = trailSnapshot.getValue(Trail.class);
+//                    if (trail != null) {
+//                        trailList.add(trail);
+//                    }
+//                }
+//
+//                // Notify the adapter that the data has changed
+//                trailAdapter.notifyDataSetChanged();
+//                Log.d("SearchActivity", "Loaded trails from Firebase: " + trailList.size());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.w("SearchActivity", "loadPost:onCancelled", databaseError.toException());
+//                Toast.makeText(SearchActivity.this, "Failed to load trails.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        Log.d("SearchActivity", "fetched trails from Firebase");
     }
 
 }

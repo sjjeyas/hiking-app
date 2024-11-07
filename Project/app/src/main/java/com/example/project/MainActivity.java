@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_login);
 //        setContentView(R.layout.activity_search);
 //        setContentView(R.layout.activity_main);
-        Intent intent = new Intent(MainActivity.this, TrailActivity.class);
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
         startActivity(intent);
 
 
