@@ -1,5 +1,7 @@
 package com.example.project;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,15 +30,33 @@ import java.util.Set;
 
 public class showReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Bear Gulch Cave Trail";
+    private String trail = "Big Bear Lake Trail";
     private TextView titleReview;
     private TextView reviews;
+    private Button back;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showreview);
         FirebaseApp.initializeApp(this);
+
+        String t = getIntent().getStringExtra("trailname");
+        if (t != null){
+            trail = t;
+        }
+
+        back = (Button) findViewById(R.id.back_button);
+        back.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("addReviewActivity", "go back button pushed");
+                backToTrail();
+            }
+        });
+
+
         Log.d("showReviewActivity", "This is a debug message!");
         titleReview = findViewById(R.id.titlereview);
         String title = "Reviews: " + trail;
@@ -70,35 +90,11 @@ public class showReviewActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
-        mDatabase.child(trail ).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                    DataSnapshot ds = task.getResult();
-                    Object result = ds.getValue();
-                    assert result != null;
-                    Trail newTrail = ds.getValue(Trail.class);
-                    if (newTrail != null) {
-                        Log.d("firebase", "Loaded trail: " + newTrail.name);
-                        TextView name = findViewById(R.id.trailname);
-                        TextView description = findViewById(R.id.traildescription);
-                        TextView location = findViewById(R.id.traillocation);
-                        name.setText(newTrail.name);
-                        description.setText(newTrail.description);
-                        location.setText(newTrail.location);
-                    } else {
-                        Log.d("firebase", "No trail found");
-                    }
-                }
-            }
-        });
-         */
+    }
 
+    private void backToTrail(){
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
     }
 }

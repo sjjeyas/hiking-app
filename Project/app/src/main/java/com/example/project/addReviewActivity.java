@@ -1,5 +1,6 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -40,10 +41,21 @@ public class addReviewActivity extends AppCompatActivity {
         Log.d("addReviewActivity", "This is a debug message!");
         reviewTextView = findViewById(R.id.editreview);
         addReviewView = findViewById(R.id.addreview);
+        String t = getIntent().getStringExtra("trailname");
+        if (t != null){
+            trail = t;
+        }
         String title = "Add Review: "+trail;
         addReviewView.setText(title);
         submit = findViewById(R.id.sendreview_button);
-        back = findViewById(R.id.back_button);
+        back = (Button)findViewById(R.id.back_button);
+        back.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View v){
+               Log.d("addReviewActivity", "go back button pushed");
+               backToTrail();
+           }
+        });
         mDatabase= FirebaseDatabase.getInstance().getReference("trails");
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,13 +64,8 @@ public class addReviewActivity extends AppCompatActivity {
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backToTrail();
-            }
-        });
     }
+
 
     private void writeReview(){
         Map<String, String> data = new HashMap<>();
@@ -89,9 +96,12 @@ public class addReviewActivity extends AppCompatActivity {
                 }
             }
         });
+        backToTrail();
     }
 
     private void backToTrail(){
-
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
     }
 }

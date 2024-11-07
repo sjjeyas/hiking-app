@@ -4,8 +4,11 @@ import static android.content.ContentValues.TAG;
 
 import static java.lang.System.in;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +34,9 @@ import com.google.firebase.storage.StorageReference;
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String trail = "Aimee's Loop";
+    private Button seereview;
+    private Button addreview;
+
 
     /*
     public TrailActivity(String n){
@@ -49,11 +55,34 @@ public class TrailActivity extends AppCompatActivity {
     }*/
 
 
+
     // Access a Cloud Firestore instance from your Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trail);
+        String t = getIntent().getStringExtra("trailname");
+        if (t != null) {
+            Log.d("TrailActivity", t);
+            trail =  t;
+        }
+        addreview = (Button) findViewById(R.id.addreview_button);
+        seereview = (Button) findViewById(R.id.seereview_button);
+        seereview.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("addReviewActivity", "seereviews button pushed");
+                seeReview();
+            }
+        });
+        addreview.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("addReviewActivity", "seereviews button pushed");
+                addReview();
+            }
+        });
+
         FirebaseApp.initializeApp(this);
         Log.d("MyActivity", "This is a debug message!");
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
@@ -84,6 +113,17 @@ public class TrailActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void addReview(){
+        Intent intent = new Intent(this, addReviewActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
+    }
+
+    public void seeReview(){
+        Intent intent = new Intent(this, showReviewActivity.class);
+        intent.putExtra("trailname", trail);
+        startActivity(intent);
     }
 
 }
