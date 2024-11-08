@@ -27,10 +27,10 @@
       <SelectionState runConfigName="TrailActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ProfileActivity">
+      <SelectionState runConfigName="showReviewActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="showReviewActivity">
+      <SelectionState runConfigName="GroupActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

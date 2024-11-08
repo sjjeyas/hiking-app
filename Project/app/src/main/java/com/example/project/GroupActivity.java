@@ -93,7 +93,7 @@ public class GroupActivity extends AppCompatActivity {
 
         */
 
-        mDatabase.child("NewGroup").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child("SoCal Hikers").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

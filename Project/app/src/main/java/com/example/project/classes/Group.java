@@ -8,20 +8,20 @@ public class Group {
     public String name;
     public HashMap<String, Object> members;
     public String trail;
-    public String people;
+    //public String people;
 
     public Group(String n, String r, String t){
         name = n;
         members.put(r, true);
         trail = t;
-        people = "1";
+        //people = "1";
     }
     public Group(){
 
     }
 
     public boolean joinGroup(String r){
-        if (Integer.valueOf(people) < 5){
+        if (members.size() < 5){
             members.put(r, true);
             return true;
         }else{
