@@ -16,7 +16,7 @@ public class Trail {
         this.name = n;
         this.location = l;
         this.description = d;
-        this.difficulty = 0;
+        this.difficulty = 3;
         this.quality = 0;
         this.zipcode = 0;
         this.reviews = Collections.emptyList();
@@ -25,4 +25,28 @@ public class Trail {
     public Trail() {
 
     }
+
+    public String getName(){
+        return name;
+    }
+    public String getLocation() {
+        return location;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public float getDifficulty() {
+        return difficulty;
+    }
+
+    public String getDifficultyString(){
+        int count = Math.round(difficulty);
+
+        StringBuilder result = new StringBuilder();
+        for (int i  = 0; i < count; i++){
+            result.append("★");
+        }
+        return result.toString();
+    }
 }
+

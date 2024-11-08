@@ -1,7 +1,4 @@
 package com.example.project;
-import static android.content.Intent.*;
-import static com.google.firebase.auth.AuthKt.getAuth;
-
 import android.os.Bundle;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -113,13 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent intent
                                             = new Intent(LoginActivity.this,
                                             MainActivity.class);
-//                                    const auth = getAuth();
-//                                    const user = auth.currentUser
-                                    String userID ="";
-                                    userID = FirebaseAuth.getInstance().getUid();
-                                    intent.putExtra("user", userID);
                                     startActivity(intent);
-
                                 } else {
 
                                     // sign-in failed
