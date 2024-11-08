@@ -34,7 +34,7 @@ public class addReviewActivity extends AppCompatActivity {
     private String trail;
     private Button submit;
     private Button back;
-    private String user = "zaynmalik";
+    private String user = "nicole";
     private TextView reviewTextView;
     private TextView ratingTextView;
     private FirebaseAuth mAuth;

@@ -1,4 +1,6 @@
 package com.example.project.classes;
+import static com.google.common.primitives.UnsignedBytes.toInt;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -6,20 +8,28 @@ public class Group {
     public String name;
     public HashMap<String, Object> members;
     public String trail;
+    public String people;
 
     public Group(String n, String r, String t){
         name = n;
         members.put(r, true);
         trail = t;
+        people = "1";
     }
     public Group(){
 
     }
 
-    void joinGroup(String r){
-        members.put(r, true);
+    public boolean joinGroup(String r){
+        if (Integer.valueOf(people) < 5){
+            members.put(r, true);
+            return true;
+        }else{
+            return false;
+        }
+
     }
-    void leaveGroup (String r){
+    public void leaveGroup (String r){
         members.remove(r);
     }
 }
