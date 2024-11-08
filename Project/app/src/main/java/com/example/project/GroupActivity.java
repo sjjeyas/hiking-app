@@ -39,6 +39,7 @@ public class GroupActivity extends AppCompatActivity {
     private Button join;
     private String user = "zaynmalik";
     private String groupname = "SoCal Hikers";
+    private boolean joined = false;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -111,13 +112,44 @@ public class GroupActivity extends AppCompatActivity {
                         join.setOnClickListener(new View.OnClickListener(){
                             @Override
                             public void onClick(View v){
-                                Log.d("GroupActivity", "trying to join group");
-                                boolean success = g.joinGroup(user);
-                                HashMap<String, Object> members = g.members;
-                                mDatabase.child(groupname).child("members").setValue(members);
-                                if (success){
+                                if(!joined){
+                                    Log.d("GroupActivity", "trying to join group");
+                                    boolean success = g.joinGroup(user);
+                                    HashMap<String, Object> members = g.members;
+                                    mDatabase.child(groupname).child("members").setValue(members);
+                                    if (success){
+                                        Toast.makeText(getApplicationContext(),
+                                                        "Joined group!!",
+                                                        Toast.LENGTH_LONG)
+                                                .show();
+                                        Log.d("GroupActivity", "Loaded group: " + g.name);
+                                        TextView name = findViewById(R.id.groupname);
+                                        TextView location = findViewById(R.id.trailname);
+                                        TextView users = findViewById(R.id.userlist);
+                                        name.setText(g.name);
+                                        location.setText(g.trail);
+                                        String r = "";
+                                        Set<String> keys = g.members.keySet();
+                                        for (String k : g.members.keySet()){
+                                            r += k + "\n";
+                                        }
+                                        users.setText(r);
+                                        join.setText("LEAVE");
+                                        joined=true;
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),
+                                                        "Too many people in group!!",
+                                                        Toast.LENGTH_LONG)
+                                                .show();
+                                    }
+                                }
+                                else{
+                                    Log.d("GroupActivity", "leaving group");
+                                    g.leaveGroup(user);
+                                    HashMap<String, Object> members = g.members;
+                                    mDatabase.child(groupname).child("members").setValue(members);
                                     Toast.makeText(getApplicationContext(),
-                                                    "Joined group!!",
+                                                    "Left group!!",
                                                     Toast.LENGTH_LONG)
                                             .show();
                                     Log.d("GroupActivity", "Loaded group: " + g.name);
@@ -132,12 +164,10 @@ public class GroupActivity extends AppCompatActivity {
                                         r += k + "\n";
                                     }
                                     users.setText(r);
-                                }else{
-                                    Toast.makeText(getApplicationContext(),
-                                                    "Too many people in group!!",
-                                                    Toast.LENGTH_LONG)
-                                            .show();
+                                    join.setText("JOIN");
+                                    joined = false;
                                 }
+
                             }
                         });
                         Log.d("GroupActivity", "Loaded group: " + g.name);

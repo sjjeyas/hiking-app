@@ -29,7 +29,7 @@ public class Group {
         }
 
     }
-    public void leaveGroup (String r){
+    public void leaveGroup(String r){
         members.remove(r);
     }
 }
