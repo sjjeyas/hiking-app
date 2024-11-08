@@ -38,6 +38,7 @@ public class GroupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button join;
     private String user = "zaynmalik";
+    private String groupname = "SoCal Hikers";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -93,7 +94,7 @@ public class GroupActivity extends AppCompatActivity {
 
         */
 
-        mDatabase.child("SoCal Hikers").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child(groupname).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -113,7 +114,7 @@ public class GroupActivity extends AppCompatActivity {
                                 Log.d("GroupActivity", "trying to join group");
                                 boolean success = g.joinGroup(user);
                                 HashMap<String, Object> members = g.members;
-                                mDatabase.child("NewGroup").child("members").setValue(members);
+                                mDatabase.child(groupname).child("members").setValue(members);
                                 if (success){
                                     Toast.makeText(getApplicationContext(),
                                                     "Joined group!!",
