@@ -178,14 +178,14 @@ public class TrailActivity extends AppCompatActivity {
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;
-//        } else if (id == R.id.action_trailsearch) {
-//            Log.d("MainActivity", "Search button clicked");
-//            Intent intent = new Intent(this, SearchActivity.class);
-//            String userID ="";
-//            userID = FirebaseAuth.getInstance().getUid();
-//            intent.putExtra("user", userID);
-//            startActivity(intent);
-//            return true;
+        } else if (id == R.id.action_trailsearch) {
+            Log.d("MainActivity", "Search button clicked");
+            Intent intent = new Intent(this, SearchActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.action_friends) {
             Log.d("MainActivity", "Friends button clicked");
             Intent intent = new Intent(this, FriendsActivity.class);

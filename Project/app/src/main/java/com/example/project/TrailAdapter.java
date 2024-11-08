@@ -61,7 +61,7 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
 
             // Pass trail information to the detail activity
             assert trail != null;
-            intent.putExtra("trailName", trail.getName());
+            intent.putExtra("trailname", trail.getName());
 
             getContext().startActivity(intent);
         });
