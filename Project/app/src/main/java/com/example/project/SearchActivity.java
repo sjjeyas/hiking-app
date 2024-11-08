@@ -68,12 +68,13 @@ public class SearchActivity extends AppCompatActivity {
                 trailList.clear();
 
                 for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+//                    String name = trailSnapshot.child("name").getValue(String.class);
+//                    String location = trailSnapshot.child("location").getValue(String.class);
+//                    String description = trailSnapshot.child("description").getValue(String.class);
+////
                     HashMap<String, String> trailMap = (HashMap<String, String>) trailSnapshot.getValue();
                     Trail trail = new Trail (trailMap.get("name"), trailMap.get("location"), trailMap.get("description"));
-
-                    if (trail != null) {
-                            trailList.add(trail);
-                    }
+                    trailList.add(trail);
                 }
 
                 trailAdapter.updateData(trailList);  // Update the adapter with the new data

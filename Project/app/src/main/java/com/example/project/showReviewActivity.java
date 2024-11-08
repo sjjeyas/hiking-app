@@ -88,17 +88,21 @@ public class showReviewActivity extends AppCompatActivity {
                 }
                 else {
                     Log.d("showReviewActivity", String.valueOf(task.getResult().getValue()));
-                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+
+                    Map<String, String> results = (Map<String, String>) task.getResult().getValue();
+//                    Map<String, String> reviews = (Map<String, String>) task.getResult().getValue();
+
+
                     if (results != null) {
                         Log.d("showReviewActivity", String.valueOf(results));
-                        String r = "";
-                        Set<String> keys = results.keySet();
-                        for (String k : results.keySet()){
-                            r += k + "\n";
-                            String toparse = String.valueOf(results.get(k));
-                            toparse = toparse.replaceAll("[{}]", "");
-                            String[] parsed = toparse.split("=");
-                            r += parsed[1].trim() + "\n" + "\n";
+                        StringBuilder r = new StringBuilder();
+
+                        for (Map.Entry<String, String> entry : results.entrySet()){
+                            String reviewer = entry.getKey();       // Reviewer name
+                            String reviewText = entry.getValue();   // Review text
+
+                            r.append(reviewer).append(":\n")
+                                    .append(reviewText).append("\n\n");
                         }
                         reviews = findViewById(R.id.reviews);
                         reviews.setText(r);

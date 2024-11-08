@@ -1,7 +1,9 @@
 package com.example.project.classes;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Trail {
     public String name;
@@ -10,7 +12,7 @@ public class Trail {
     public int zipcode;
     public String location;
     public String description;
-    public List<Review> reviews;
+    public Map<String, String> reviews;
 
     public Trail(String n, String l, String d){
         this.name = n;
@@ -19,7 +21,7 @@ public class Trail {
         this.difficulty = 3;
         this.quality = 0;
         this.zipcode = 0;
-        this.reviews = Collections.emptyList();
+        this.reviews = new HashMap<>();
     }
 
     public Trail() {
