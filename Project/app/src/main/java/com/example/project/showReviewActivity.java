@@ -89,7 +89,7 @@ public class showReviewActivity extends AppCompatActivity {
                 else {
                     Log.d("showReviewActivity", String.valueOf(task.getResult().getValue()));
 
-                    Map<String, String> results = (Map<String, String>) task.getResult().getValue();
+                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
 //                  Map<String, String> reviews = (Map<String, String>) task.getResult().getValue();
 
 
@@ -97,12 +97,13 @@ public class showReviewActivity extends AppCompatActivity {
                         Log.d("showReviewActivity", String.valueOf(results ));
                         StringBuilder r = new StringBuilder();
 
-                        for (Map.Entry<String, String> entry : results.entrySet()){
+                        for (Map.Entry<String, Object> entry : results.entrySet()){
                             String reviewer = entry.getKey();       // Reviewer name
-                            String reviewText = entry.getValue();   // Review text
-
-                            r.append(reviewer).append(":\n")
-                                    .append(reviewText).append("\n\n");
+                            HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
+                            String rating = (String) reviewBody.get("rating");
+                            String review = (String) reviewBody.get("text");
+                            r.append(reviewer).append(":\n").append(rating + "\n")
+                                    .append(review).append("\n\n");
                         }
                         reviews = findViewById(R.id.reviews);
                         reviews.setText(r);
