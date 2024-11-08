@@ -36,7 +36,7 @@ public class addReviewActivity extends AppCompatActivity {
     private Button back;
     private String user = "zaynmalik";
     private TextView reviewTextView;
-
+    private TextView ratingTextView;
     private FirebaseAuth mAuth;
 
 
@@ -61,6 +61,7 @@ public class addReviewActivity extends AppCompatActivity {
         Log.d("addReviewActivity", "This is a debug message!");
         reviewTextView = findViewById(R.id.editreview);
         addReviewView = findViewById(R.id.addreview);
+        ratingTextView = findViewById(R.id.rating);
         String t = getIntent().getStringExtra("trailname");
         if (t != null){
             trail = t;
@@ -93,7 +94,9 @@ public class addReviewActivity extends AppCompatActivity {
     private void writeReview(){
         Map<String, String> data = new HashMap<>();
         String review = reviewTextView.getText().toString();
-        data.put(user, review);
+        String rating = ratingTextView.getText().toString();
+        data.put("text", review);
+        data.put("rating", rating);
         Log.d("addReviewActivity", review);
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
         mDatabase.child(trail).child("reviews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -106,28 +109,36 @@ public class addReviewActivity extends AppCompatActivity {
                     // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
                     // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
                     //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
-                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                    results.put(user, data);
-                    mDatabase.child(trail).child("reviews").setValue(results)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("addReviewActivity", "Review added successfully");
+                    if (task.getResult().getValue() != null){
+                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                        results.put(user, data);
+                        mDatabase.child(trail).child("reviews").setValue(results)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("addReviewActivity", "Review added successfully");
 
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("addReviewActivity", "Error adding review", e);
-                            });
-                    //
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("addReviewActivity", "Error adding review", e);
+                                });
+                        //
+                    }else{
+                        Map<String, Object> results = new HashMap<>();
+                        results.put(user, data);
+                        mDatabase.child(trail).child("reviews").setValue(results)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("addReviewActivity", "Review added successfully");
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("addReviewActivity", "Error adding review", e);
+                                });
+                    }
+
                 }
             }
         });
     }
 
-
-//    private void backToTrail(){
-//        Intent intent = new Intent(this, TrailActivity.class);
-//        intent.putExtra("trailname", trail);
-//        startActivity(intent);
-//    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource

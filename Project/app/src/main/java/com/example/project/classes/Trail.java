@@ -12,7 +12,7 @@ public class Trail {
     public int zipcode;
     public String location;
     public String description;
-    public Map<String, String> reviews;
+    public Map<String, Object> reviews;
 
     public Trail(String n, String l, String d){
         this.name = n;

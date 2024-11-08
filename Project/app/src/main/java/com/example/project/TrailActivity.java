@@ -38,7 +38,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail;
+    private String trail = "Boy Scout Trail";
     private Button seereview;
     private Button addreview;
     private FirebaseAuth mAuth;

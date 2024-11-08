@@ -34,7 +34,7 @@ import java.util.Set;
 
 public class showReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String trail = "Big Bear Lake Trail";
+    private String trail = "Arcata Ridge Trail: Sunny Brae Section";
     private TextView titleReview;
     private TextView reviews;
     private Button back;
@@ -90,11 +90,11 @@ public class showReviewActivity extends AppCompatActivity {
                     Log.d("showReviewActivity", String.valueOf(task.getResult().getValue()));
 
                     Map<String, String> results = (Map<String, String>) task.getResult().getValue();
-//                    Map<String, String> reviews = (Map<String, String>) task.getResult().getValue();
+//                  Map<String, String> reviews = (Map<String, String>) task.getResult().getValue();
 
 
                     if (results != null) {
-                        Log.d("showReviewActivity", String.valueOf(results));
+                        Log.d("showReviewActivity", String.valueOf(results ));
                         StringBuilder r = new StringBuilder();
 
                         for (Map.Entry<String, String> entry : results.entrySet()){
@@ -106,6 +106,7 @@ public class showReviewActivity extends AppCompatActivity {
                         }
                         reviews = findViewById(R.id.reviews);
                         reviews.setText(r);
+                        Log.d("showReviewActivity", "now it crashes");
                     } else {
                         Log.d("showReviewActivity", "No review found");
                     }
