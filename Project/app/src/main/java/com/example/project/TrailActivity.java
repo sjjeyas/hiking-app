@@ -62,12 +62,18 @@ public class TrailActivity extends AppCompatActivity {
     public void addReview(){
         Intent intent = new Intent(this, addReviewActivity.class);
         intent.putExtra("trailname", trail);
+        String userID ="";
+        userID = FirebaseAuth.getInstance().getUid();
+        intent.putExtra("user", userID);
         startActivity(intent);
     }
 
     public void seeReview(){
         Intent intent = new Intent(this, showReviewActivity.class);
         intent.putExtra("trailname", trail);
+        String userID ="";
+        userID = FirebaseAuth.getInstance().getUid();
+        intent.putExtra("user", userID);
         startActivity(intent);
     }
 

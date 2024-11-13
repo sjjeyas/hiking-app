@@ -8,13 +8,11 @@ public class Group {
     public String name;
     public HashMap<String, Object> members;
     public String trail;
-    //public String people;
 
     public Group(String n, String r, String t){
         name = n;
         members.put(r, true);
         trail = t;
-        //people = "1";
     }
     public Group(){
 

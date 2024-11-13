@@ -1,5 +1,7 @@
 package com.example.project;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,20 +18,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.project.classes.Group;
+import com.example.project.classes.Registered;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 import java.util.Set;
 
 public class ProfileActivity  extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user = "zaynmalik";
+    private String username = "america";
     private TextView zipView;
     private TextView userView;
     private TextView nameView;
@@ -44,6 +52,7 @@ public class ProfileActivity  extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
 
         mAuth = FirebaseAuth.getInstance();
+
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -59,16 +68,20 @@ public class ProfileActivity  extends AppCompatActivity {
             }
         });
 
-        String t = getIntent().getStringExtra("user");
-        if (t != null){
-            user = t;
-        }
+
 
         userView = findViewById(R.id.usernamefield);
         zipView = findViewById(R.id.locationfield);
         nameView = findViewById(R.id.namefield);
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        mDatabase.child(user).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        String t = getIntent().getStringExtra("user");
+        if (t != null){
+            username = t;
+        }else {
+            username = "User not available!";
+        }
+
+        mDatabase.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -82,7 +95,7 @@ public class ProfileActivity  extends AppCompatActivity {
                         nameView.setText(String.valueOf(results.get("name")));
                         zipView.setText(String.valueOf(results.get("zipcode")));
                     } else {
-                        Log.d("ProfileActivity", "No friend found");
+                        Log.d("ProfileActivity", "No user found");
                     }
                 }
             }
@@ -91,8 +104,8 @@ public class ProfileActivity  extends AppCompatActivity {
 
     private void seeFriends(){
         Intent intent = new Intent(this, FriendsActivity.class);
-        intent.putExtra("user", user);
-        startActivity(intent);
+        intent.putExtra("user", username);
+        this.startActivity(intent);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

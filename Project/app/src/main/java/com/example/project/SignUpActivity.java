@@ -99,12 +99,12 @@ public class SignUpActivity extends AppCompatActivity {
                         // User created successfully
                         mDatabase = FirebaseDatabase.getInstance().getReference("users");
                         Map<String, String> data = new HashMap<>();
-                        //Map<String, String> friends = new HashMap<>();
                         data.put("username", email);
                         data.put("name", name);
                         data.put("zipcode", zipcode);
-                        //data.put("friends", friends);
-                        mDatabase.child(name).setValue(data)
+                        String u = mAuth.getCurrentUser().getUid();
+                        data.put("userID", u);
+                        mDatabase.child(u).setValue(data)
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("SignUpActivity", "User added successfully");
                                 })

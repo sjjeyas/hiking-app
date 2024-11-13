@@ -46,6 +46,8 @@ public class SearchActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
 
+        String user = getIntent().getStringExtra("user");
+
         // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.appbar);
@@ -57,7 +59,7 @@ public class SearchActivity extends AppCompatActivity {
 
         ListView searchList = findViewById(R.id.searchList);
 
-        trailAdapter = new TrailAdapter(this, new ArrayList<>());
+        trailAdapter = new TrailAdapter(this, new ArrayList<>(), user);
         searchList.setAdapter(trailAdapter);
 
         SearchView sv = findViewById(R.id.searchView);

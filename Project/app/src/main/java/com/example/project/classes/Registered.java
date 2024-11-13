@@ -11,6 +11,7 @@ public class Registered {
     //private List<TrailsList> trails;
     //private List<Registered> friends;
     //private String profilePic;
+    private String userID;
     private String location;
     /*
 

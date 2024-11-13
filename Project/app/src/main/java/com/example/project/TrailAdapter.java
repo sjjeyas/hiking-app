@@ -1,7 +1,13 @@
 package com.example.project;
 
+import static android.content.Intent.getIntent;
+import static android.content.Intent.getIntentOld;
+import static android.content.Intent.parseUri;
+
 import android.content.Context;
 import android.content.Intent;
+
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +27,13 @@ import java.util.List;
 public class TrailAdapter extends ArrayAdapter<Trail> {
     private List<Trail> originalTrails;
     private List<Trail> filteredTrails;
+    private String user;
 
-    public TrailAdapter(Context context, List<Trail> trails) {
+    public TrailAdapter(Context context, List<Trail> trails, String u) {
         super(context, 0, trails);
         this.originalTrails = new ArrayList<>(trails);
         this.filteredTrails = new ArrayList<>(trails);
+        this.user = u;
     }
 
     public void updateData(List<Trail> trails) {
@@ -42,7 +50,6 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_trail, parent, false);
         }
-
         Trail trail = getItem(position);
         if (trail != null) {
             TextView trailName = convertView.findViewById(R.id.trailName);
@@ -62,6 +69,7 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
             // Pass trail information to the detail activity
             assert trail != null;
             intent.putExtra("trailname", trail.getName());
+            intent.putExtra("user", user);
 
             getContext().startActivity(intent);
         });

@@ -2,6 +2,7 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -30,11 +31,12 @@ import java.util.Set;
 
 public class addReviewActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
+    private String displayname;
     private TextView addReviewView;
     private String trail;
     private Button submit;
     private Button back;
-    private String user = "nicole";
+    private String user ;
     private TextView reviewTextView;
     private TextView ratingTextView;
     private FirebaseAuth mAuth;
@@ -43,6 +45,7 @@ public class addReviewActivity extends AppCompatActivity {
     private void backToTrail(){
         Intent intent = new Intent(this, TrailActivity.class);
         intent.putExtra("trailname", trail);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 
@@ -68,6 +71,12 @@ public class addReviewActivity extends AppCompatActivity {
         }else{
             trail = "Aimee's Loop";
         }
+        String u = getIntent().getStringExtra("user");
+        if (u != null){
+            user = u;
+        }else {
+            user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42";
+        }
         String title = "Add Review: "+trail;
         addReviewView.setText(title);
         submit = findViewById(R.id.sendreview_button);
@@ -92,51 +101,71 @@ public class addReviewActivity extends AppCompatActivity {
 
 
     private void writeReview(){
+        DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
         Map<String, String> data = new HashMap<>();
-        String review = reviewTextView.getText().toString();
-        String rating = ratingTextView.getText().toString();
-        data.put("text", review);
-        data.put("rating", rating);
-        Log.d("addReviewActivity", review);
-        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
-        mDatabase.child(trail).child("reviews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
+                if (!task.isSuccessful()){
                     Log.e("addReviewActivity", "Error getting data", task.getException());
-                } else {
-                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
-                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
-                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
-                    if (task.getResult().getValue() != null){
-                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                        results.put(user, data);
-                        mDatabase.child(trail).child("reviews").setValue(results)
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("addReviewActivity", "Review added successfully");
+                }else{
+                    if(task.getResult().getValue() != null){
+                        displayname = (String) task.getResult().getValue();
+                        Log.e("addReviewActivity", "Writing for name " + displayname);
+                        String review = reviewTextView.getText().toString();
+                        String rating = ratingTextView.getText().toString();
+                        data.put("text", review);
+                        data.put("rating", rating);
+                        data.put("displayname", displayname);
+                        Log.d("addReviewActivity", review);
+                        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
+                        mDatabase.child(trail).child("reviews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("addReviewActivity", "Error getting data", task.getException());
+                                } else {
+                                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
+                                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
+                                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
+                                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
+                                    if (task.getResult().getValue() != null){
+                                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                                        results.put(user, data);
+                                        mDatabase.child(trail).child("reviews").setValue(results)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.d("addReviewActivity", "Review added successfully");
 
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("addReviewActivity", "Error adding review", e);
-                                });
-                        //
-                    }else{
-                        Map<String, Object> results = new HashMap<>();
-                        results.put(user, data);
-                        mDatabase.child(trail).child("reviews").setValue(results)
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("addReviewActivity", "Review added successfully");
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e("addReviewActivity", "Error adding review", e);
+                                                });
+                                        //
+                                    }else{
+                                        Map<String, Object> results = new HashMap<>();
+                                        results.put(user, data);
+                                        mDatabase.child(trail).child("reviews").setValue(results)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.d("addReviewActivity", "Review added successfully");
 
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("addReviewActivity", "Error adding review", e);
-                                });
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e("addReviewActivity", "Error adding review", e);
+                                                });
+                                    }
+
+                                }
+                            }
+                        });
                     }
-
+                    else{
+                        Log.e("addReviewActivity", "Error getting data", task.getException());
+                    }
                 }
+
             }
         });
+
     }
 
 
