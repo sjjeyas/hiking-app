@@ -299,6 +299,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_signup) {
+            Log.d("MainActivity", "Sign Up button clicked");
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+            return true;
 //        } else if (id == R.id.action_home) {
 //            Log.d("MainActivity", "Home button clicked");
 //            Intent intent = new Intent(this, LoginActivity.class);
