@@ -149,6 +149,8 @@ public class FriendsActivity extends AppCompatActivity {
                                         TextView friendslist = findViewById(R.id.friendslist);
                                         friendslist.setText(r);
                                     } else {
+                                        TextView friendslist = findViewById(R.id.friendslist);
+                                        friendslist.setText("No friends found! :(");
                                         Log.d("FriendsActivity", "No friend found");
                                     }
 
