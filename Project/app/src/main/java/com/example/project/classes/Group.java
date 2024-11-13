@@ -19,7 +19,7 @@ public class Group {
     }
 
     public boolean joinGroup(String r){
-        if (members.size() < 5){
+        if (members.size() < 4){
             members.put(r, true);
             return true;
         }else{

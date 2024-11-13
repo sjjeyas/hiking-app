@@ -32,6 +32,7 @@ public class FriendsActivity extends AppCompatActivity {
     private String user;
     private FirebaseAuth mAuth;
     private Button back;
+    private String displayname;
 
     private void backToProfile(){
         Intent intent = new Intent(this, ProfileActivity.class);
@@ -58,14 +59,14 @@ public class FriendsActivity extends AppCompatActivity {
         if (u != null){
             user = String.valueOf(u);
         }else{
-            user = "sneha";
+            user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42" ;
         }
 
         back = (Button)findViewById(R.id.back_button);
         back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("addReviewActivity", "go back button pushed");
+                Log.d("FriendsActivity", "go back button pushed");
                 backToProfile();
             }
         });
@@ -104,46 +105,66 @@ public class FriendsActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+
         /*
-        THIS CODE ADDS A USER AND THEIR FRIENDS
+        //THIS CODE ADDS A USER AND THEIR FRIENDS
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        Map<String, String> data = new HashMap<>();
         Map<String, String> friends = new HashMap<>();
-        data.put("username", "chao wang");
-        friends.put("nicole", "true");
-        mDatabase.child("chao wang").setValue(data);
-        mDatabase.child("chao wang").child("friends").setValue(friends);
-         */
+        friends.put("princessdiana", "true");
+        friends.put("niallh", "true");
+        friends.put("zaynmalik", "true");
+        mDatabase.child(user).child("friends").setValue(friends);
+        */
 
         //THIS CODE ACCESSES AND READS FRIENDS
 
-        TextView username = findViewById(R.id.user);
-        username.setText(String.valueOf(user + "'s Friends"));
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
+        names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
+                if (!task.isSuccessful()){
                     Log.e("FriendsActivity", "Error getting data", task.getException());
-                } else {
-                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                    if (results != null) {
-                        Log.d("FriendsActivity", String.valueOf(results));
-                        String r = "";
-                        Set<String> keys = results.keySet();
-                        for (String k : results.keySet()){
-                            r += k + "\n";
-                        }
-                        TextView friendslist = findViewById(R.id.friendslist);
-                        friendslist.setText(r);
-                    } else {
-                        Log.d("FriendsActivity", "No friend found");
-                    }
+                }else{
+                    if(task.getResult().getValue() != null){
+                        displayname = (String) task.getResult().getValue();
+                        Log.e("FriendsActivity", "Reading friends for name " + displayname);
+                        TextView username = findViewById(R.id.user);
+                        username.setText(String.valueOf(displayname + "'s Friends"));
+                        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                        mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("FriendsActivity", "Error getting data", task.getException());
+                                } else {
+                                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
+                                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                                    if (results != null) {
+                                        Log.d("FriendsActivity", String.valueOf(results));
+                                        String r = "";
+                                        Set<String> keys = results.keySet();
+                                        for (String k : results.keySet()){
+                                            r += k + "\n";
+                                        }
+                                        TextView friendslist = findViewById(R.id.friendslist);
+                                        friendslist.setText(r);
+                                    } else {
+                                        Log.d("FriendsActivity", "No friend found");
+                                    }
 
+                                }
+                            }
+                        });
+                    }
+                    else{
+                        Log.e("addReviewActivity", "Error getting data", task.getException());
+                    }
                 }
+
             }
         });
+
+
 
 
     }

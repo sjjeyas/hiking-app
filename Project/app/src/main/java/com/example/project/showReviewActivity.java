@@ -75,6 +75,7 @@ public class showReviewActivity extends AppCompatActivity {
         });
 
 
+
         Log.d("showReviewActivity", "This is a debug message!");
         titleReview = findViewById(R.id.titlereview);
         String title = "Reviews: " + trail;
