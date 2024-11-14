@@ -36,36 +36,39 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="username"
+        android:layout_marginStart="49dp"
+        android:text="Email"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.182"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.104" />
+        app:layout_constraintVertical_bias="0.117" />
 
     <TextView
         android:id="@+id/usernamefield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="placeholder for user"
-        android:textSize="32sp"
+        android:layout_marginStart="49dp"
+        android:text="placeholder for email"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.385"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.218" />
+        app:layout_constraintVertical_bias="0.185" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="name"
+        android:layout_marginStart="49dp"
+        android:text="Username"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         app:layout_constraintVertical_bias="0.329" />
@@ -74,23 +77,25 @@
         android:id="@+id/namefield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="placeholder for name"
-        android:textSize="32sp"
+        android:layout_marginStart="49dp"
+        android:text="placeholder for username"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.449"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.425" />
+        app:layout_constraintVertical_bias="0.397" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="location"
+        android:layout_marginStart="47dp"
+        android:text="Location"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.164"
+        app:layout_constraintHorizontal_bias="0.008"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         app:layout_constraintVertical_bias="0.542" />
@@ -99,14 +104,15 @@
         android:id="@+id/locationfield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="49dp"
         android:text="placeholder for location"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.653"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.664" />
+        app:layout_constraintVertical_bias="0.61" />
 
     <Button
         android:id="@+id/friends_button"

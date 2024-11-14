@@ -130,8 +130,8 @@ public class GroupActivity extends AppCompatActivity {
                                             public void onClick(View v){
                                                 if(!joined){
                                                     Log.d("GroupActivity", "trying to join group");
-                                                    boolean success = g.joinGroup(displayname);
                                                     HashMap<String, Object> members = g.members;
+                                                    boolean success = g.joinGroup(displayname);
                                                     mDatabase.child(groupname).child("members").setValue(members);
                                                     if (success){
                                                         Toast.makeText(getApplicationContext(),
