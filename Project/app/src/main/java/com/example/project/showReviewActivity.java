@@ -3,6 +3,7 @@ package com.example.project;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 
 import android.os.Bundle;
@@ -109,8 +110,8 @@ public class showReviewActivity extends AppCompatActivity {
                                     .append(review).append("\n\n");
                         }
                         reviews = findViewById(R.id.reviews);
+                        reviews.setMovementMethod(new ScrollingMovementMethod());
                         reviews.setText(r);
-                        Log.d("showReviewActivity", "now it crashes");
                     } else {
                         Log.d("showReviewActivity", "No review found");
                     }

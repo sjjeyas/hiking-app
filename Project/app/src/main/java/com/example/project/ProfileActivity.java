@@ -37,12 +37,13 @@ import java.util.Set;
 
 public class ProfileActivity  extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String username = "america";
+    private String user ;
     private TextView zipView;
     private TextView userView;
     private TextView nameView;
     private Button friends;
     private FirebaseAuth mAuth;
+    private Button mylists;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -68,6 +69,14 @@ public class ProfileActivity  extends AppCompatActivity {
             }
         });
 
+        mylists = (Button) findViewById(R.id.lists_button);
+        mylists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seeMyLists();
+            }
+        });
+
 
 
         userView = findViewById(R.id.usernamefield);
@@ -76,12 +85,11 @@ public class ProfileActivity  extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
         String t = getIntent().getStringExtra("user");
         if (t != null){
-            username = t;
+            user = t;
         }else {
-            username = "User not available!";
+            user = mAuth.getCurrentUser().getUid();
         }
-
-        mDatabase.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child(user).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -104,7 +112,12 @@ public class ProfileActivity  extends AppCompatActivity {
 
     private void seeFriends(){
         Intent intent = new Intent(this, FriendsActivity.class);
-        intent.putExtra("user", username);
+        intent.putExtra("user", user);
+        this.startActivity(intent);
+    }
+    private void seeMyLists(){
+        Intent intent = new Intent(this, myListsActivity.class);
+        intent.putExtra("user", user);
         this.startActivity(intent);
     }
 

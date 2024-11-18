@@ -34,30 +34,31 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/titlereview"
+        android:id="@+id/listname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="title"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="110dp"
+        android:text="list name"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.145" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.005" />
 
-    <TextView
-        android:id="@+id/reviews"
-        android:layout_width="299dp"
-        android:layout_height="402dp"
-        android:text="No Reviews Yet!"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:textColor="@color/black"
+        android:id="@+id/trails"
+        android:layout_width="314dp"
+        android:layout_height="405dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="206dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.626"
-        android:scrollbars = "vertical"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/back_button"
@@ -71,6 +72,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

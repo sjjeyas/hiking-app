@@ -57,9 +57,9 @@ public class FriendsActivity extends AppCompatActivity {
         Log.d("FriendsActivity", "This is a debug message!");
         String u = getIntent().getStringExtra("user");
         if (u != null){
-            user = String.valueOf(u);
-        }else{
-            user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42" ;
+            user = u;
+        }else {
+            user = mAuth.getCurrentUser().getUid();
         }
 
         back = (Button)findViewById(R.id.back_button);
