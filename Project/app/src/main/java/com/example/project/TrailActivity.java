@@ -229,74 +229,11 @@ public class TrailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     private void addTrail(){
-        String listname = "norcal trails";
-        String user = FirebaseAuth.getInstance().getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        mDatabase.child(user).child("lists").child(listname).child("trails").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()){
-                    Log.e("TrailActivity", "Error getting data1", task.getException());
-                    //
-                }else{
-                    if(task.getResult().getValue() != null){
-                        Map<String, Object> trailsresults = (Map<String, Object>) task.getResult().getValue();
-                        Log.e("TrailActivity", String.valueOf(trailsresults));
-                        Log.e("TrailActivity", "Writing for UID2 " + user);
-                        mDatabase.child(user).child("lists").child(listname).child("trails").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (!task.isSuccessful()) {
-
-                                    Log.e("TrailActivity", "Error getting data2", task.getException());
-
-                                } else {
-                                    if (task.getResult().getValue() != null){
-                                        Log.e("TrailActivity", String.valueOf(task.getResult()));
-                                        trailsresults.put(trail, true);
-                                        mDatabase.child(user).child("lists").child(listname).child("trails").setValue(trailsresults)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d("TrailActivity", "Trail added successfully2");
-
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    Log.e("TrailActivity", "Error adding trail2", e);
-                                                });
-                                        //
-                                    }else{
-                                        Map<String, Object> results = new HashMap<>();
-                                        results.put(trail, true);
-                                        mDatabase.child(user).child("lists").child(listname).child("trails").setValue(results)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d("TrailActivity", "Trail added successfully3");
-
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    Log.e("TrailActivity", "Error adding trail3", e);
-                                                });
-                                    }
-
-                                }
-                            }
-                        });
-                    }
-                    else{
-                        Log.e("TrailActivity", "Error getting data4", task.getException());
-                        Log.e("TrailActivity", "Trying to write for Trail " + trail);
-                        Map<String, Object> results = new HashMap<>();
-                        results.put(trail, true);
-                        mDatabase.child(user).child("lists").child(listname).child("trails").setValue(results)
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("TrailActivity", "Trail added successfully3");
-
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("TrailActivity", "Error adding trail3", e);
-                                });
-                    }
-                }
-
-            }
-        });
+        Intent intent = new Intent(this, pickListActivity.class);
+        intent.putExtra("trailname", trail);
+        String userID ="";
+        userID = FirebaseAuth.getInstance().getUid();
+        intent.putExtra("user", userID);
+        startActivity(intent);
     }
 }
