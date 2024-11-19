@@ -98,6 +98,7 @@ public class myListsActivity extends AppCompatActivity {
             }
         });
         names.child(user).child("lists").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()){
@@ -112,14 +113,15 @@ public class myListsActivity extends AppCompatActivity {
                         for (Map.Entry<String, Object> entry : lists.entrySet()){
                             HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
                             String name = (String) reviewBody.get("name");
-                            String description = (String) reviewBody.get("description");
-                            r = name + ":\n"  + description+ "\n\n";
-                            TLists.add(r);
+                            TLists.add(name);
                         }
                         for (String l : TLists){
                             TextView newTextView = new TextView(getApplicationContext());
 
-                            newTextView.setText(l);// for example
+                            newTextView.setText(l);
+                            newTextView.setHeight(175);
+                            newTextView.setTextColor(R.color.black);
+                            newTextView.setTextSize(20);
                             newTextView.setOnClickListener(new View.OnClickListener()
                             {
                                 @Override

@@ -98,6 +98,7 @@ public class pickListActivity extends AppCompatActivity {
             }
         });
         names.child(user).child("lists").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()){
@@ -118,7 +119,10 @@ public class pickListActivity extends AppCompatActivity {
                         for (String l : TLists){
                             TextView newTextView = new TextView(getApplicationContext());
 
-                            newTextView.setText(l);// for example
+                            newTextView.setText(l);
+                            newTextView.setHeight(175);
+                            newTextView.setTextColor(R.color.black);
+                            newTextView.setTextSize(20);
                             newTextView.setOnClickListener(new View.OnClickListener()
                             {
                                 @Override

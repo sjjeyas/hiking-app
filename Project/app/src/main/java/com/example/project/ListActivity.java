@@ -20,8 +20,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ListActivity extends AppCompatActivity {
     private String user;
@@ -40,7 +43,7 @@ public class ListActivity extends AppCompatActivity {
         nameView = findViewById(R.id.listname);
         mAuth = FirebaseAuth.getInstance();
 
-        trailslist = findViewById(R.id.trails);
+        trailslist = findViewById(R.id.trailslayout);
 
         String u = getIntent().getStringExtra("user");
         if (u != null){
@@ -64,18 +67,46 @@ public class ListActivity extends AppCompatActivity {
         Log.e("ListActivity", "Db load of " + listname);
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
         mDatabase.child(user).child("lists").child(listname).child("trails").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()){
                     Log.e("ListActivity", "Error getting data1", task.getException());
                     TextView noTrails = new TextView(getApplicationContext());
                     noTrails.setText("No trails able to load!");
+                    noTrails.setTextColor(R.color.black);
                     trailslist.addView(noTrails);
                     //
                 }else{
                     if(task.getResult().getValue() != null){
                         Map<String, Object> trailsresults = (Map<String, Object>) task.getResult().getValue();
                         Log.e("ListActivity", String.valueOf(trailsresults));
+                        if (trailsresults != null) {
+
+                            String r = "";
+                            Set<String> keys = trailsresults.keySet();
+                            for (String k : trailsresults.keySet()){
+                                TextView newTextView = new TextView(getApplicationContext());
+                                Log.d("ListActivity", k);
+                                newTextView.setText(String.valueOf(k));
+                                newTextView.setHeight(175);
+                                newTextView.setTextColor(R.color.black);
+                                newTextView.setTextSize(20);
+                                newTextView.setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        goToTrail(k);
+                                    }
+                                });
+                                trailslist.addView(newTextView);
+                            }
+
+                        } else {
+                            Log.d("ListActivity", "No trail found");
+                        }
+
                     }
                     else{
                         Log.e("ListActivity", "Error getting data2", task.getException());
@@ -88,6 +119,12 @@ public class ListActivity extends AppCompatActivity {
     private void goToLists(){
         Intent intent = new Intent(this, myListsActivity.class);
         intent.putExtra("user", user);
+        this.startActivity(intent);
+    }
+    private void goToTrail(String t){
+        Intent intent = new Intent(this, TrailActivity.class);
+        intent.putExtra("user", user);
+        intent.putExtra("trailname", t);
         this.startActivity(intent);
     }
 }

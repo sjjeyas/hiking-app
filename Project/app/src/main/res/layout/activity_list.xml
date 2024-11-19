@@ -49,16 +49,32 @@
         app:layout_constraintVertical_bias="0.005" />
 
     <LinearLayout
-        android:orientation="vertical"
-        android:textColor="@color/black"
-        android:id="@+id/trails"
-        android:layout_width="314dp"
-        android:layout_height="405dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="206dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        android:id="@+id/listlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="205dp"
+        tools:layout_editor_absoluteY="-283dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/trailslayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="55dp"
+                android:layout_marginTop="202dp"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </ScrollView>
+    </LinearLayout>
 
     <Button
         android:id="@+id/back_button"

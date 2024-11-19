@@ -106,17 +106,6 @@ public class FriendsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        /*
-        //THIS CODE ADDS A USER AND THEIR FRIENDS
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        Map<String, String> friends = new HashMap<>();
-        friends.put("princessdiana", "true");
-        friends.put("niallh", "true");
-        friends.put("zaynmalik", "true");
-        mDatabase.child(user).child("friends").setValue(friends);
-        */
-
-        //THIS CODE ACCESSES AND READS FRIENDS
 
         DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
         names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
