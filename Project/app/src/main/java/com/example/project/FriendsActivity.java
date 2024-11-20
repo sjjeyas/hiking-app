@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,16 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.project.classes.Group;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,13 +33,39 @@ public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String user;
     private FirebaseAuth mAuth;
-    private Button back;
+    private ListView friendsListView;
     private String displayname;
+    private List<String> friendsList = new ArrayList<>();
+    private ArrayAdapter<String> friendsAdapter;
 
-    private void backToProfile(){
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("user", (String)user);
-        startActivity(intent);
+    private void openFriendProfile(String friendname) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        usersRef.orderByChild("name").equalTo(friendname).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Loop through the results to find the matching userID
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String userID = snapshot.getKey(); // Get the userID (key) of the user
+                        if (userID != null) {
+                            // Launch ProfileActivity with the found userID
+                            Intent intent = new Intent(FriendsActivity.this, ProfileActivity.class);
+                            intent.putExtra("user", userID);
+                            startActivity(intent);
+                            break; // Exit loop after finding the first match
+                        }
+                    }
+                } else {
+                    Toast.makeText(FriendsActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FriendsActivity", "Error querying user: ", databaseError.toException());
+                Toast.makeText(FriendsActivity.this, "Error fetching user data.", Toast.LENGTH_SHORT).show();
+            }
+        });;
     }
 
 
@@ -56,108 +84,57 @@ public class FriendsActivity extends AppCompatActivity {
 
         Log.d("FriendsActivity", "This is a debug message!");
         String u = getIntent().getStringExtra("user");
-        if (u != null){
+        if (u != null) {
             user = u;
-        }else {
+        } else {
             user = mAuth.getCurrentUser().getUid();
         }
 
-        back = (Button)findViewById(R.id.back_button);
-        back.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Log.d("FriendsActivity", "go back button pushed");
-                backToProfile();
-            }
+        friendsListView = findViewById(R.id.friends_list_view);
+        friendsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, friendsList);
+        friendsListView.setAdapter(friendsAdapter);
+
+        friendsListView.setOnItemClickListener((parent, view, position, id) -> {
+            String friendname = friendsList.get(position);
+            Log.d("FriendsActivity", "Clicked on friend: " + friendname);
+            openFriendProfile(friendname);
         });
 
-//        Log.d("FriendsActivity", user);
-//        TextView username = findViewById(R.id.user);
-//        username.setText(String.valueOf(user + "'s Friends"));
-//        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-//        mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("FriendsActivity", "Error getting data", task.getException());
-//                } else {
-//                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-//                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
-//                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
-//                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
-//                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-//                    results.put("fazle", true);
-//                    mDatabase.child(user).child("friends").setValue(results);
-//                    //
-//                    if (results != null) {
-//                        Log.d("FriendsActivity", String.valueOf(results));
-//                        String r = "";
-//                        Set<String> keys = results.keySet();
-//                        for (String k : results.keySet()){
-//                            r += k + "\n";
-//                        }
-//                        TextView friendslist = findViewById(R.id.friendslist);
-//                        friendslist.setText(r);
-//                    } else {
-//                        Log.d("FriendsActivity", "No friend found");
-//                    }
-//
-//                }
-//            }
-//        });
-
-
-        DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
-        names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()){
-                    Log.e("FriendsActivity", "Error getting data", task.getException());
-                }else{
-                    if(task.getResult().getValue() != null){
-                        displayname = (String) task.getResult().getValue();
-                        Log.e("FriendsActivity", "Reading friends for name " + displayname);
-                        TextView username = findViewById(R.id.user);
-                        username.setText(String.valueOf(displayname + "'s Friends"));
-                        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                        mDatabase.child(user).child("friends").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.e("FriendsActivity", "Error getting data", task.getException());
-                                } else {
-                                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-                                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                                    if (results != null) {
-                                        Log.d("FriendsActivity", String.valueOf(results));
-                                        String r = "";
-                                        Set<String> keys = results.keySet();
-                                        for (String k : results.keySet()){
-                                            r += k + "\n";
-                                        }
-                                        TextView friendslist = findViewById(R.id.friendslist);
-                                        friendslist.setText(r);
-                                    } else {
-                                        TextView friendslist = findViewById(R.id.friendslist);
-                                        friendslist.setText("No friends found! :(");
-                                        Log.d("FriendsActivity", "No friend found");
-                                    }
-
-                                }
+        DatabaseReference names = FirebaseDatabase.getInstance().getReference("users");
+        names.child(user).child("name").get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e("FriendsActivity", "Error getting data", task.getException());
+            } else {
+                if (task.getResult().getValue() != null) {
+                    displayname = (String) task.getResult().getValue();
+                    Log.e("FriendsActivity", "Reading friends for name " + displayname);
+                    TextView username = findViewById(R.id.user);
+                    username.setText(String.valueOf(displayname + "'s Friends"));
+                    mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                    mDatabase.child(user).child("friends").get().addOnCompleteListener(task1 -> {
+                        if (!task1.isSuccessful()) {
+                            Log.e("FriendsActivity", "Error getting data", task1.getException());
+                        } else {
+                            Map<String, Object> results = (Map<String, Object>) task1.getResult().getValue();
+                            if (results != null) {
+                                Log.d("FriendsActivity", String.valueOf(results));
+                                Set<String> keys = results.keySet();
+                                friendsList.clear();
+                                friendsList.addAll(keys);
+                                friendsAdapter.notifyDataSetChanged();
+                            } else {
+                                Log.d("FriendsActivity", "No friends found");
+                                friendsList.clear();
+                                friendsList.add("No friends found! :(");
+                                friendsAdapter.notifyDataSetChanged();
                             }
-                        });
-                    }
-                    else{
-                        Log.e("addReviewActivity", "Error getting data", task.getException());
-                    }
+                        }
+                    });
+                } else {
+                    Log.e("FriendsActivity", "Error getting data", task.getException());
                 }
-
             }
         });
-
-
-
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,32 +169,21 @@ public class FriendsActivity extends AppCompatActivity {
         } else if (id == R.id.action_profile) {
             Log.d("MainActivity", "Profile button clicked");
             Intent intent = new Intent(this, ProfileActivity.class);
-            String userID ="";
-            userID = FirebaseAuth.getInstance().getUid();
+            String userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
             Intent intent = new Intent(this, SearchActivity.class);
-            String userID ="";
-            userID = FirebaseAuth.getInstance().getUid();
+            String userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;
-//        } else if (id == R.id.action_friends) {
-//            Log.d("MainActivity", "Friends button clicked");
-//            Intent intent = new Intent(this, FriendsActivity.class);
-//            String userID ="";
-//            userID = FirebaseAuth.getInstance().getUid();
-//            intent.putExtra("user", userID);
-//            startActivity(intent);
-//            return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("MainActivity", "Groups button clicked");
             Intent intent = new Intent(this, GroupActivity.class);
-            String userID ="";
-            userID = FirebaseAuth.getInstance().getUid();
+            String userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;

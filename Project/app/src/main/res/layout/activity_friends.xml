@@ -45,18 +45,15 @@
         app:layout_constraintTop_toBottomOf="@id/appbar"
         app:layout_constraintVertical_bias="0.063" />
 
-    <TextView
-        android:id="@+id/friendslist"
-        android:layout_width="292dp"
+    <ListView
+        android:id="@+id/friends_list_view"
+        android:layout_width="match_parent"
         android:layout_height="262dp"
-        android:text="placeholder"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.317" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/back_button" />
+
     <Button
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -68,6 +65,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.232"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/find_friends_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
+        android:background="@color/brown"
+        android:text="Find Friends"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.696"
         app:layout_constraintStart_toStartOf="parent" />
 
 
