@@ -130,8 +130,8 @@ public class GroupActivity extends AppCompatActivity {
                                             public void onClick(View v){
                                                 if(!joined){
                                                     Log.d("GroupActivity", "trying to join group");
-                                                    HashMap<String, Object> members = g.members;
                                                     boolean success = g.joinGroup(displayname);
+                                                    HashMap<String, Object> members = g.members;
                                                     mDatabase.child(groupname).child("members").setValue(members);
                                                     if (success){
                                                         Toast.makeText(getApplicationContext(),
@@ -254,7 +254,7 @@ public class GroupActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
@@ -268,14 +268,14 @@ public class GroupActivity extends AppCompatActivity {
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;
-//        } else if (id == R.id.action_groupsearch) {
-//            Log.d("MainActivity", "Groups button clicked");
-//            Intent intent = new Intent(this, GroupActivity.class);
-//            String userID ="";
-//            userID = FirebaseAuth.getInstance().getUid();
-//            intent.putExtra("user", userID);
-//            startActivity(intent);
-//            return true;
+        } else if (id == R.id.action_groupsearch) {
+            Log.d("MainActivity", "Groups button clicked");
+            Intent intent = new Intent(this, GroupSearchActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

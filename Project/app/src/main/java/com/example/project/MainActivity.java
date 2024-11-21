@@ -299,11 +299,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_signup) {
-            Log.d("MainActivity", "Sign Up button clicked");
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-            return true;
 //        } else if (id == R.id.action_home) {
 //            Log.d("MainActivity", "Home button clicked");
 //            Intent intent = new Intent(this, LoginActivity.class);
@@ -319,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
@@ -335,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("MainActivity", "Groups button clicked");
-            Intent intent = new Intent(this, GroupActivity.class);
+            Intent intent = new Intent(this, GroupSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);

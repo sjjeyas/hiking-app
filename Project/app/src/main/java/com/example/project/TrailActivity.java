@@ -6,7 +6,6 @@ import static java.lang.System.in;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,17 +36,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String trail = "Boy Scout Trail";
     private Button seereview;
     private Button addreview;
     private FirebaseAuth mAuth;
-    private TextView descriptionView;
-    private Button addtoList;
+
     /*
     public TrailActivity(String n){
         trail = n;
@@ -90,15 +85,13 @@ public class TrailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trail);
 
-
         mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-        descriptionView = findViewById(R.id.traildescription);
-        descriptionView.setMovementMethod(new ScrollingMovementMethod());
+
         String t = getIntent().getStringExtra("trailname");
         if (t != null){
             trail = t;
@@ -106,10 +99,8 @@ public class TrailActivity extends AppCompatActivity {
             trail = "Aimee's Loop";
         }
 
-
         addreview = (Button) findViewById(R.id.addreview_button);
         seereview = (Button) findViewById(R.id.seereview_button);
-        addtoList = (Button) findViewById(R.id.list_button);
         seereview.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -122,13 +113,6 @@ public class TrailActivity extends AppCompatActivity {
             public void onClick(View v){
                 Log.d("TrailActivity", "addreviews button pushed");
                 addReview();
-            }
-        });
-        addtoList.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Log.d("TrailActivity", "addtolist button pushed");
-                addTrail();
             }
         });
 
@@ -202,7 +186,7 @@ public class TrailActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
@@ -227,13 +211,5 @@ public class TrailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    private void addTrail(){
-        Intent intent = new Intent(this, pickListActivity.class);
-        intent.putExtra("trailname", trail);
-        String userID ="";
-        userID = FirebaseAuth.getInstance().getUid();
-        intent.putExtra("user", userID);
-        startActivity(intent);
     }
 }

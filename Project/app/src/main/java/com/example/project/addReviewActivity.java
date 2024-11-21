@@ -75,7 +75,7 @@ public class addReviewActivity extends AppCompatActivity {
         if (u != null){
             user = u;
         }else {
-            user = mAuth.getCurrentUser().getUid();
+            user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42";
         }
         String title = "Add Review: "+trail;
         addReviewView.setText(title);
@@ -208,7 +208,7 @@ public class addReviewActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);

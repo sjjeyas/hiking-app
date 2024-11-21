@@ -3,7 +3,6 @@ package com.example.project;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 
 import android.os.Bundle;
@@ -110,8 +109,8 @@ public class showReviewActivity extends AppCompatActivity {
                                     .append(review).append("\n\n");
                         }
                         reviews = findViewById(R.id.reviews);
-                        reviews.setMovementMethod(new ScrollingMovementMethod());
                         reviews.setText(r);
+                        Log.d("showReviewActivity", "now it crashes");
                     } else {
                         Log.d("showReviewActivity", "No review found");
                     }
@@ -165,7 +164,7 @@ public class showReviewActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);

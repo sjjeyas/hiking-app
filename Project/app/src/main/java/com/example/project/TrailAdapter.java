@@ -1,14 +1,8 @@
 package com.example.project;
 
-import static android.content.Intent.getIntent;
-import static android.content.Intent.getIntentOld;
-import static android.content.Intent.parseUri;
-
 import android.content.Context;
 import android.content.Intent;
 
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +15,6 @@ import androidx.annotation.NonNull;
 import com.example.project.classes.Trail;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TrailAdapter extends ArrayAdapter<Trail> {

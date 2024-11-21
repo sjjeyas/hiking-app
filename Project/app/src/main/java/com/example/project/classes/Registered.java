@@ -57,7 +57,7 @@ public class Registered {
 
     }
 
-    Group createGroup(String name, String location){
-        return new Group(name, location, this.username);
-    }
+//    Group createGroup(String name, String location){
+//        return new Group(name, location, this.username);
+//    }
 }
