@@ -108,10 +108,10 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             checkFriendStatus(isFriend -> {
                 if (isFriend) {
-                    dynamicButton.setText("Unfriend");
+                    dynamicButton.setText("unfriend");
                     dynamicButton.setOnClickListener(v -> unfriendUser());
                 } else {
-                    dynamicButton.setText("Add Friend");
+                    dynamicButton.setText("add friend");
                     dynamicButton.setOnClickListener(v -> addFriend());
                 }
             });
