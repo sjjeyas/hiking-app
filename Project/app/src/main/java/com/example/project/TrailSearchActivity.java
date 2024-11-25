@@ -1,101 +1,99 @@
 package com.example.project;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.project.classes.Trail;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
+public class TrailSearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String username = "america";
-    private TextView zipView;
-    private TextView userView;
-    private TextView nameView;
-    private Button friends;
+    private List<Trail> trailList = new ArrayList<>();
+    private TrailAdapter trailAdapter;
     private FirebaseAuth mAuth;
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_search);
+
         FirebaseApp.initializeApp(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference("trails");
 
+        String user = getIntent().getStringExtra("user");
+
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
-
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        fetchTrailListFromFirebase();
 
-        Log.d("ProfileActivity", "This is a debug message!");
-//        friends = (Button) findViewById(R.id.friends_button);
-//        friends.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                seeFriends();
-//            }
-//        });
+        ListView searchList = findViewById(R.id.searchList);
 
+        trailAdapter = new TrailAdapter(this, new ArrayList<>(), user);
+        searchList.setAdapter(trailAdapter);
 
-
-        userView = findViewById(R.id.usernamefield);
-        zipView = findViewById(R.id.locationfield);
-        nameView = findViewById(R.id.namefield);
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        String t = getIntent().getStringExtra("user");
-        if (t != null){
-            username = t;
-        }else {
-            username = "User not available!";
-        }
-
-        mDatabase.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        SearchView sv = findViewById(R.id.searchView);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("ProfileActivity", "Error getting data", task.getException());
-                } else {
-                    Log.d("ProfileActivity", String.valueOf(task.getResult().getValue()));
-                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                    if (results != null) {
-                        Log.d("ProfileActivity", String.valueOf(results));
-                        userView.setText(String.valueOf(results.get("username")));
-                        nameView.setText(String.valueOf(results.get("name")));
-                        zipView.setText(String.valueOf(results.get("zipcode")));
-                    } else {
-                        Log.d("ProfileActivity", "No user found");
-                    }
-                }
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                trailAdapter.getFilter().filter(newText);
+                return false;
             }
         });
     }
 
-    private void seeFriends(){
-        Intent intent = new Intent(this, FriendsActivity.class);
-        intent.putExtra("user", username);
-        this.startActivity(intent);
+    private void fetchTrailListFromFirebase() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                trailList.clear();
+
+                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+                    HashMap<String, String> trailMap = (HashMap<String, String>) trailSnapshot.getValue();
+                    Trail trail = new Trail (trailMap.get("name"), trailMap.get("location"), trailMap.get("description"));
+                    trailList.add(trail);
+                }
+
+                trailAdapter.updateData(trailList);  // Update the adapter with the new data
+                Log.d("SearchActivity", "Loaded trails from Firebase: " + trailList.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("SearchActivity", "loadPost:onCancelled", databaseError.toException());
+                Toast.makeText(TrailSearchActivity.this, "Failed to load trails.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,22 +125,22 @@ public class ProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             return true;
-//        } else if (id == R.id.action_profile) {
-//            Log.d("MainActivity", "Profile button clicked");
-//            Intent intent = new Intent(this, ProfileActivity.class);
-//            String userID ="";
-//            userID = FirebaseAuth.getInstance().getUid();
-//            intent.putExtra("user", userID);
-//            startActivity(intent);
-//            return true;
-        } else if (id == R.id.action_trailsearch) {
-            Log.d("ProfileActivity", "Search button clicked");
-            Intent intent = new Intent(this, TrailSearchActivity.class);
+        } else if (id == R.id.action_profile) {
+            Log.d("MainActivity", "Profile button clicked");
+            Intent intent = new Intent(this, ProfileActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;
+//        } else if (id == R.id.action_trailsearch) {
+//            Log.d("ProfileActivity", "Search button clicked");
+//            Intent intent = new Intent(this, SearchActivity.class);
+//            String userID ="";
+//            userID = FirebaseAuth.getInstance().getUid();
+//            intent.putExtra("user", userID);
+//            startActivity(intent);
+//            return true;
         } else if (id == R.id.action_friends) {
             Log.d("ProfileActivity", "Friends button clicked");
             Intent intent = new Intent(this, FriendsActivity.class);
@@ -153,7 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("ProfileActivity", "Groups button clicked");
-            Intent intent = new Intent(this, GroupActivity.class);
+            Intent intent = new Intent(this, GroupSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
@@ -163,4 +161,5 @@ public class ProfileActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

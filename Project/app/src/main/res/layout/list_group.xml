@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="219dp"
+            android:layout_height="53dp"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxEms="30"
+            android:maxLines="1"
+            android:padding="6dp"
+            android:text="Name"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="142dp"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:textAlignment="textEnd">
+
+            <TextView
+                android:id="@+id/groupTrail"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Location"
+                android:textAlignment="textEnd"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/groupCapacity"
+                android:layout_width="138dp"
+                android:layout_height="26dp"
+                android:text="0/0"
+                android:textAlignment="textEnd" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/groupMembers"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="6dp"
+        android:text="Member 1, Member 2, Member 3"
+        android:textSize="18sp" />
+</LinearLayout>

@@ -24,14 +24,14 @@
         app:menu="@menu/navbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="start"-->
-<!--            android:text="@string/app_name"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="25sp"-->
-<!--            />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -45,7 +45,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         android:queryHint="Search here"
-        />
+        >
+
+    </androidx.appcompat.widget.SearchView>
 
     <ListView
         android:id="@+id/searchList"
@@ -57,7 +59,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0" >
+    </ListView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addgroup_button"
+        android:layout_width="77dp"
+        android:layout_height="72dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:src="@drawable/baseline_add_24"
+        android:visibility="gone"
+        app:backgroundTint="#783617"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

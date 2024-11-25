@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.project.classes.Group;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -146,8 +144,8 @@ public class FriendsActivity extends AppCompatActivity {
                                         for (String k : results.keySet()){
                                             r += k + "\n";
                                         }
-                                        TextView friendslist = findViewById(R.id.friendslist);
-                                        friendslist.setText(r);
+//                                        TextView friendslist = findViewById(R.id.friendslist);
+//                                        friendslist.setText(r);
                                     } else {
                                         Log.d("FriendsActivity", "No friend found");
                                     }
