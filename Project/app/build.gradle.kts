@@ -76,5 +76,7 @@ dependencies {
     // For for black box
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("org.mockito:mockito-android:4.8.0")
+    androidTestImplementation("androidx.test:runner:1.6.1")
+    androidTestImplementation("androidx.test:rules:1.6.1")
 
 }
