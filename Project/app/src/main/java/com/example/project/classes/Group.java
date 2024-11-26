@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Group {
     public String name;
-    public HashMap<String, Object> members;
+    public HashMap<String, Object> members = new HashMap<>();
     public String trail;
     public int capacity;
 

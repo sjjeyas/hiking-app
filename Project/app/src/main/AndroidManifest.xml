@@ -55,6 +55,8 @@
             android:exported="true"/>
         <activity android:name=".editProfileActivity"
             android:exported="true"/>
+        <activity android:name=".makeGroupActivity"
+            android:exported="true"/>
         <activity android:name=".addReviewActivity"
             android:exported="true">
             <intent-filter>

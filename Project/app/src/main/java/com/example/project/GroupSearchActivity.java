@@ -42,6 +42,7 @@ public class GroupSearchActivity extends AppCompatActivity {
         FloatingActionButton addButton = findViewById(R.id.addgroup_button);
         addButton.setVisibility(ListView.VISIBLE);
         addButton.setOnClickListener(v -> {
+            Log.d("GroupSearchActivity", "Add Clicked");
             Intent intent = new Intent(this, makeGroupActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
