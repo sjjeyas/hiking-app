@@ -5,17 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,22 +22,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-public class FriendsActivity extends AppCompatActivity {
+public class FriendSearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private String user;
+    private List<String> userList = new ArrayList<>();
+    private FriendAdapter friendAdapter; // Custom adapter for displaying user names
     private FirebaseAuth mAuth;
-    private ListView friendsListView;
-    private String displayname;
-    private List<String> friendsList = new ArrayList<>();
-    private ArrayAdapter<String> friendsAdapter;
 
-    private void openFriendProfile(String friendname) {
+    private void openUserProfile(String username) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-        usersRef.orderByChild("name").equalTo(friendname).addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.orderByChild("name").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -49,32 +42,34 @@ public class FriendsActivity extends AppCompatActivity {
                         String userID = snapshot.getKey(); // Get the userID (key) of the user
                         if (userID != null) {
                             // Launch ProfileActivity with the found userID
-                            Intent intent = new Intent(FriendsActivity.this, ProfileActivity.class);
+                            Intent intent = new Intent(FriendSearchActivity.this, ProfileActivity.class);
                             intent.putExtra("user", userID);
                             startActivity(intent);
                             break; // Exit loop after finding the first match
                         }
                     }
                 } else {
-                    Toast.makeText(FriendsActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendSearchActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("FriendsActivity", "Error querying user: ", databaseError.toException());
-                Toast.makeText(FriendsActivity.this, "Error fetching user data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FriendSearchActivity.this, "Error fetching user data.", Toast.LENGTH_SHORT).show();
             }
         });;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(this);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_friendsearch);
 
+        FirebaseApp.initializeApp(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -82,65 +77,57 @@ public class FriendsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        Log.d("FriendsActivity", "This is a debug message!");
-        String u = getIntent().getStringExtra("user");
-        if (u != null) {
-            user = u;
-        } else {
-            user = mAuth.getCurrentUser().getUid();
-        }
+        ListView searchList = findViewById(R.id.userList);
+        friendAdapter = new FriendAdapter(this, new ArrayList<>());
+        searchList.setAdapter(friendAdapter);
 
-        friendsListView = findViewById(R.id.friends_list_view);
-        friendsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, friendsList);
-        friendsListView.setAdapter(friendsAdapter);
-
-        friendsListView.setOnItemClickListener((parent, view, position, id) -> {
-            String friendname = friendsList.get(position);
-            Log.d("FriendsActivity", "Clicked on friend: " + friendname);
-            openFriendProfile(friendname);
+        searchList.setOnItemClickListener((parent, view, position, id) -> {
+            String userName = friendAdapter.getItem(position);
+            Log.d("friendSearchActivity", "Clicked on user: " + userName);
+            openUserProfile(userName);
         });
 
-        findFriendsButton = findViewById(R.id.find_friends_button);
-        findFriendsButton.setOnClickListener(v -> {
-            Log.d("FriendsActivity", "Find Friends button clicked");
-            Intent intent = new Intent(FriendsActivity.this, FriendSearchActivity.class);
-            intent.putExtra("user", user); // Pass the current user ID
-            startActivity(intent);
+        SearchView searchView = findViewById(R.id.userSearch);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                friendAdapter.getFilter().filter(newText);
+                return false;
+            }
         });
 
-        DatabaseReference names = FirebaseDatabase.getInstance().getReference("users");
-        names.child(user).child("name").get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e("FriendsActivity", "Error getting data", task.getException());
-            } else {
-                if (task.getResult().getValue() != null) {
-                    displayname = (String) task.getResult().getValue();
-                    Log.e("FriendsActivity", "Reading friends for name " + displayname);
-                    TextView username = findViewById(R.id.user);
-                    username.setText(String.valueOf(displayname + "'s Friends"));
-                    mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                    mDatabase.child(user).child("friends").get().addOnCompleteListener(task1 -> {
-                        if (!task1.isSuccessful()) {
-                            Log.e("FriendsActivity", "Error getting data", task1.getException());
-                        } else {
-                            Map<String, Object> results = (Map<String, Object>) task1.getResult().getValue();
-                            if (results != null) {
-                                Log.d("FriendsActivity", String.valueOf(results));
-                                Set<String> keys = results.keySet();
-                                friendsList.clear();
-                                friendsList.addAll(keys);
-                                friendsAdapter.notifyDataSetChanged();
-                            } else {
-                                Log.d("FriendsActivity", "No friends found");
-                                friendsList.clear();
-                                friendsList.add("No friends found! :(");
-                                friendsAdapter.notifyDataSetChanged();
-                            }
+        fetchUserListFromFirebase();
+    }
+
+    private void fetchUserListFromFirebase() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList.clear();
+
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    HashMap<String, String> userMap = (HashMap<String, String>) userSnapshot.getValue();
+                    if (userMap != null) {
+                        String name = userMap.get("name"); // Extract user name
+                        if (name != null) {
+                            userList.add(name);
                         }
-                    });
-                } else {
-                    Log.e("FriendsActivity", "Error getting data", task.getException());
+                    }
                 }
+
+                friendAdapter.updateData(userList); // Update the adapter with the new data
+                Log.d("friendSearchActivity", "Loaded users from Firebase: " + userList.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("friendSearchActivity", "loadPost:onCancelled", databaseError.toException());
+                Toast.makeText(FriendSearchActivity.this, "Failed to load users.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -185,6 +172,14 @@ public class FriendsActivity extends AppCompatActivity {
             Log.d("MainActivity", "Search button clicked");
             Intent intent = new Intent(this, SearchActivity.class);
             String userID = FirebaseAuth.getInstance().getUid();
+            intent.putExtra("user", userID);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_friends) {
+            Log.d("MainActivity", "Friends button clicked");
+            Intent intent = new Intent(this, FriendsActivity.class);
+            String userID ="";
+            userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
             return true;

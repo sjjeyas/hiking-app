@@ -44,8 +44,10 @@ public class ListActivity extends AppCompatActivity {
         String u = getIntent().getStringExtra("user");
         if (u != null){
             user = u;
-        }else{
+        }else if (mAuth != null){
             user = mAuth.getCurrentUser().getUid();
+        }else {
+            user = "GKV2jTHo8mVcoaBTXbuP9whvCys2";
         }
         String n = getIntent().getStringExtra("listname");
         if (n != null){

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LatLng defaultLocation;
     private DatabaseReference databaseReference;
-    private GoogleMap mMap;
+    GoogleMap mMap;
 
     private EditText zipInput;
     private Button searchButton;
@@ -136,14 +136,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void updateMapWithNewLocation(LatLng location) {
+    void updateMapWithNewLocation(LatLng location) {
         mMap.clear(); // Clear existing markers
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
         fetchTrailsAndDisplayMarkers(location);
     }
 
 
-    private void fetchTrailsAndDisplayMarkers(LatLng location) {
+    void fetchTrailsAndDisplayMarkers(LatLng location) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Adjust the camera to fit all markers if there are any trails
                 if (!trails.isEmpty()) {
                     LatLngBounds bounds = boundsBuilder.build();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 9));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
 //                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); // 100 is padding
 //                    mMap.animateCamera(CameraUpdateFactory.zoomBy(0.05f));
                 } else {
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private LatLng getLocationFromZipcode(String zipcode) {
+    LatLng getLocationFromZipcode(String zipcode) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
@@ -335,6 +335,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setGeocoder(Geocoder mockGeocoder) {
     }
 }
 
