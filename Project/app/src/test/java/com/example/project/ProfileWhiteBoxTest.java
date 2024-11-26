@@ -1,22 +1,25 @@
 package com.example.project;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +53,7 @@ public class ProfileWhiteBoxTest {
         when(mockDatabase.child("testUserId")).thenReturn(mockUserRef);
         Task<DataSnapshot> mockTask = mock(Task.class);
         DataSnapshot mockSnapshot = mock(DataSnapshot.class);
-        when(mockUserRef.child("friends")).thenReturn(mockUserRef);
+//        when(mockUserRef.child("friends")).thenReturn(mockUserRef);
 
         // Mock user data
         Map<String, Object> mockUserData = new HashMap<>();
@@ -59,50 +62,50 @@ public class ProfileWhiteBoxTest {
         mockUserData.put("zipcode", "12345");
 
         // Configure the mock Task and DataSnapshot for user profile
-        when(mockTask.isSuccessful()).thenReturn(true);
-        when(mockTask.getResult()).thenReturn(mockSnapshot);
-        when(mockSnapshot.getValue()).thenReturn(mockUserData);
+//        when(mockTask.isSuccessful()).thenReturn(true);
+//        when(mockTask.getResult()).thenReturn(mockSnapshot);
+//        when(mockSnapshot.getValue()).thenReturn(mockUserData);
 
         // Mock get() call to return the mockTask for user profile
         when(mockUserRef.get()).thenReturn(mockTask);
 
-        // Mock the friends reference
-        DatabaseReference mockFriendsRef = mock(DatabaseReference.class);
-        when(mockUserRef.child("friends")).thenReturn(mockFriendsRef);
-
-        // Mock a specific friend's reference
-        DatabaseReference mockFriendRef = mock(DatabaseReference.class);
-        when(mockFriendsRef.child("friendName")).thenReturn(mockFriendRef);
-
-        // Stub `setValue()` for adding a friend
-        Task<Void> mockAddFriendTask = mock(Task.class);
-        when(mockAddFriendTask.isSuccessful()).thenReturn(true);
-        doAnswer(invocation -> {
-            OnCompleteListener<Void> listener = invocation.getArgument(0);
-            listener.onComplete(mockAddFriendTask); // Simulate successful task completion
-            return null;
-        }).when(mockFriendRef).setValue(true);
-
-        // Stub `removeValue()` for unfriending
-        Task<Void> mockUnfriendTask = mock(Task.class);
-        when(mockUnfriendTask.isSuccessful()).thenReturn(true);
-        doAnswer(invocation -> {
-            OnCompleteListener<Void> listener = invocation.getArgument(0);
-            listener.onComplete(mockUnfriendTask); // Simulate successful task completion
-            return null;
-        }).when(mockFriendRef).removeValue();
-
-        // Stub `get()` for checking friend status
-        Task<DataSnapshot> mockFriendCheckTask = mock(Task.class);
-        DataSnapshot mockFriendSnapshot = mock(DataSnapshot.class);
-        when(mockFriendCheckTask.isSuccessful()).thenReturn(true);
-        when(mockFriendCheckTask.getResult()).thenReturn(mockFriendSnapshot);
-        when(mockFriendSnapshot.exists()).thenReturn(true); // Simulate the friend exists
-        doAnswer(invocation -> {
-            OnCompleteListener<DataSnapshot> listener = invocation.getArgument(0);
-            listener.onComplete(mockFriendCheckTask); // Simulate successful task completion
-            return null;
-        }).when(mockFriendRef).get();
+//        // Mock the friends reference
+//        DatabaseReference mockFriendsRef = mock(DatabaseReference.class);
+//        when(mockUserRef.child("friends")).thenReturn(mockFriendsRef);
+//
+//        // Mock a specific friend's reference
+//        DatabaseReference mockFriendRef = mock(DatabaseReference.class);
+//        when(mockFriendsRef.child("friendName")).thenReturn(mockFriendRef);
+//
+//        // Stub `setValue()` for adding a friend
+//        Task<Void> mockAddFriendTask = mock(Task.class);
+//        when(mockAddFriendTask.isSuccessful()).thenReturn(true);
+//        doAnswer(invocation -> {
+//            OnCompleteListener<Void> listener = invocation.getArgument(0);
+//            listener.onComplete(mockAddFriendTask); // Simulate successful task completion
+//            return null;
+//        }).when(mockFriendRef).setValue(true);
+//
+//        // Stub `removeValue()` for unfriending
+//        Task<Void> mockUnfriendTask = mock(Task.class);
+//        when(mockUnfriendTask.isSuccessful()).thenReturn(true);
+//        doAnswer(invocation -> {
+//            OnCompleteListener<Void> listener = invocation.getArgument(0);
+//            listener.onComplete(mockUnfriendTask); // Simulate successful task completion
+//            return null;
+//        }).when(mockFriendRef).removeValue();
+//
+//        // Stub `get()` for checking friend status
+//        Task<DataSnapshot> mockFriendCheckTask = mock(Task.class);
+//        DataSnapshot mockFriendSnapshot = mock(DataSnapshot.class);
+//        when(mockFriendCheckTask.isSuccessful()).thenReturn(true);
+//        when(mockFriendCheckTask.getResult()).thenReturn(mockFriendSnapshot);
+//        when(mockFriendSnapshot.exists()).thenReturn(true); // Simulate the friend exists
+//        doAnswer(invocation -> {
+//            OnCompleteListener<DataSnapshot> listener = invocation.getArgument(0);
+//            listener.onComplete(mockFriendCheckTask); // Simulate successful task completion
+//            return null;
+//        }).when(mockFriendRef).get();
 
         // Initialize ProfileManager
         profileManager = new ProfileManager(mockAuth, mockDatabase);
@@ -138,12 +141,35 @@ public class ProfileWhiteBoxTest {
 
 //    @Test
 //    public void testAddFriend() {
+//        // Arrange
+//        Task<Void> mockAddFriendTask = mock(Task.class);
+//        when(mockAddFriendTask.isSuccessful()).thenReturn(true);
+//
+//        // Mock the intermediate database references
+//        DatabaseReference mockFriendsRef = mock(DatabaseReference.class);
+//        DatabaseReference mockFriendRef = mock(DatabaseReference.class);
+//
+//        // Stub intermediate `child()` calls
+//        when(mockUserRef.child("friends")).thenReturn(mockFriendsRef);
+//        when(mockFriendsRef.child("friendName")).thenReturn(mockFriendRef);
+//
+//        // Stub `setValue()` to simulate task completion
+//        doAnswer(invocation -> {
+//            OnCompleteListener<Void> listener = invocation.getArgument(0);
+//            listener.onComplete(mockAddFriendTask); // Simulate task completion
+//            return mockAddFriendTask;
+//        }).when(mockFriendRef).setValue(eq(true));
+//
+//        // Act
 //        profileManager.addFriend("testUserId", "friendName", task -> {
+//            // Assert
 //            assertTrue(task.isSuccessful());
 //        });
 //
-//        verify(mockUserRef.child("friends").child("friendName"), times(1)).setValue(true);
+//        // Verify correct behavior
+//        verify(mockFriendRef, times(1)).setValue(eq(true));
 //    }
+//
 //
 //    @Test
 //    public void testUnfriend() {
