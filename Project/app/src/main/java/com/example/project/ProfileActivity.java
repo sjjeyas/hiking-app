@@ -314,7 +314,7 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("ProfileActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
 
             intent.putExtra("user", currentUserID);
             startActivity(intent);
@@ -328,7 +328,7 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("ProfileActivity", "Groups button clicked");
-            Intent intent = new Intent(this, GroupActivity.class);
+            Intent intent = new Intent(this, GroupSearchActivity.class);
             intent.putExtra("user", currentUserID);
             startActivity(intent);
             return true;

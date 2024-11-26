@@ -220,7 +220,7 @@ public class addReviewActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("MainActivity", "Groups button clicked");
-            Intent intent = new Intent(this, GroupActivity.class);
+            Intent intent = new Intent(this, GroupSearchActivity.class);
             String userID ="";
             userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);

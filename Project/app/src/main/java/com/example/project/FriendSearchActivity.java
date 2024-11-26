@@ -170,7 +170,7 @@ public class FriendSearchActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_trailsearch) {
             Log.d("MainActivity", "Search button clicked");
-            Intent intent = new Intent(this, SearchActivity.class);
+            Intent intent = new Intent(this, TrailSearchActivity.class);
             String userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
@@ -185,7 +185,7 @@ public class FriendSearchActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_groupsearch) {
             Log.d("MainActivity", "Groups button clicked");
-            Intent intent = new Intent(this, GroupActivity.class);
+            Intent intent = new Intent(this, GroupSearchActivity.class);
             String userID = FirebaseAuth.getInstance().getUid();
             intent.putExtra("user", userID);
             startActivity(intent);
