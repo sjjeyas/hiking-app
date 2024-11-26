@@ -14,8 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.project.classes.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,30 +27,42 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
-    private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
+//    DatabaseReference mDatabase;
+//    FirebaseAuth mAuth;
 
-    private String currentUserID;
-    private String viewingUserID; // User whose profile is being viewed
+    private ProfileManager profileManager;
+
+
+    //    User curr_user;
+    String currentUserID;
+    String viewingUserID; // User whose profile is being viewed
     private String viewingUsername; // Username of the user being viewed
     private TextView zipView, userView, nameView;
     private Button dynamicButton, myListsButton;
+
+//
+//    public ProfileActivity() {
+//        // Required empty public constructor
+//    }
+//
+//    //for JUnit testing
+//    public ProfileActivity(FirebaseAuth mAuth) {
+//        this.mAuth = mAuth;
+//    }
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        FirebaseApp.initializeApp(this);
+//        FirebaseApp.initializeApp(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        profileManager = new ProfileManager(FirebaseAuth.getInstance(), FirebaseDatabase.getInstance().getReference("users"));
 
-        // Determine which profile to display
-        viewingUserID = getIntent().getStringExtra("user");
-        if (viewingUserID == null) {
-            viewingUserID = currentUserID; // Default to logged-in user
-        }
+//        mAuth = FirebaseAuth.getInstance();
+//        currentUserID = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        currentUserID = profileManager.getCurrentUserId();
+        setUserID();
 
         // Setup toolbar
         Toolbar toolbar = findViewById(R.id.appbar);
@@ -65,33 +79,58 @@ public class ProfileActivity extends AppCompatActivity {
         myListsButton = findViewById(R.id.lists_button); // Button for lists
 
         // Load profile data
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+//        mDatabase = FirebaseDatabase.getInstance().getReference("users");
         loadUserProfile();
 
         // Configure buttons
         configureListsButton();
     }
 
-    private void loadUserProfile() {
-        mDatabase.child(viewingUserID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("ProfileActivity", "Error getting data", task.getException());
-                } else {
-                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-                    if (results != null) {
-                        Log.d("ProfileActivity", "Loaded profile: " + results);
-                        userView.setText(String.valueOf(results.get("username")));
-                        nameView.setText(String.valueOf(results.get("name")));
-                        zipView.setText(String.valueOf(results.get("zipcode")));
-                        viewingUsername = String.valueOf(results.get("name"));
+    public void setUserID(){
+        viewingUserID = getIntent().getStringExtra("user");
+        if (viewingUserID == null) {
+            viewingUserID = currentUserID; // Default to logged-in user
+        }
+    }
 
-                        // Configure dynamic button after retrieving the username
-                        configureDynamicButton();
-                    } else {
-                        Log.d("ProfileActivity", "No user found");
-                    }
+//    private void loadUserProfile() {
+//        mDatabase.child(viewingUserID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("ProfileActivity", "Error getting data", task.getException());
+//                } else {
+//                    Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+//                    if (results != null) {
+//                        Log.d("ProfileActivity", "Loaded profile: " + results);
+//                        userView.setText(String.valueOf(results.get("username")));
+//                        nameView.setText(String.valueOf(results.get("name")));
+//                        zipView.setText(String.valueOf(results.get("zipcode")));
+//                        viewingUsername = String.valueOf(results.get("name"));
+//
+//                        // Configure dynamic button after retrieving the username
+//                        configureDynamicButton();
+//                    } else {
+//                        Log.d("ProfileActivity", "No user found");
+//                    }
+//                }
+//            }
+//        });
+//    }
+
+    private void loadUserProfile() {
+        profileManager.getUserProfile(viewingUserID, task -> {
+            if (!task.isSuccessful()) {
+                Log.e("ProfileActivity", "Error getting data", task.getException());
+            } else {
+                DataSnapshot snapshot = task.getResult();
+                Map<String, Object> results = (Map<String, Object>) snapshot.getValue();
+                if (results != null) {
+                    userView.setText(String.valueOf(results.get("username")));
+                    nameView.setText(String.valueOf(results.get("name")));
+                    zipView.setText(String.valueOf(results.get("zipcode")));
+                } else {
+                    Log.d("ProfileActivity", "No user found");
                 }
             }
         });
@@ -131,22 +170,73 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+//    private void addFriend() {
+//        if (viewingUsername == null) {
+//            Toast.makeText(ProfileActivity.this, "Unable to add friend. Try again later.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Add friend using username as key
+//        mDatabase.child(currentUserID).child("friends").child(viewingUsername).setValue(true)
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        Toast.makeText(ProfileActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();
+//                        configureDynamicButton(); // Refresh button state
+//                    } else {
+//                        Toast.makeText(ProfileActivity.this, "Failed to add friend.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+//
+//    private void unfriendUser() {
+//        if (viewingUsername == null) {
+//            Toast.makeText(ProfileActivity.this, "Unable to remove friend. Try again later.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Remove friend using username as key
+//        mDatabase.child(currentUserID).child("friends").child(viewingUsername).removeValue()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        Toast.makeText(ProfileActivity.this, "Friend removed!", Toast.LENGTH_SHORT).show();
+//                        configureDynamicButton(); // Refresh button state
+//                    } else {
+//                        Toast.makeText(ProfileActivity.this, "Failed to remove friend.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+//
+//    private void checkFriendStatus(FriendStatusCallback callback) {
+//        if (viewingUsername == null) {
+//            callback.onStatusChecked(false);
+//            return;
+//        }
+//
+//        mDatabase.child(currentUserID).child("friends").child(viewingUsername).get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful() && task.getResult().exists()) {
+//                        callback.onStatusChecked(true);
+//                    } else {
+//                        callback.onStatusChecked(false);
+//                    }
+//                });
+//    }
+
     private void addFriend() {
         if (viewingUsername == null) {
             Toast.makeText(ProfileActivity.this, "Unable to add friend. Try again later.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Add friend using username as key
-        mDatabase.child(currentUserID).child("friends").child(viewingUsername).setValue(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ProfileActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();
-                        configureDynamicButton(); // Refresh button state
-                    } else {
-                        Toast.makeText(ProfileActivity.this, "Failed to add friend.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        // Use ProfileManager to add a friend
+        profileManager.addFriend(currentUserID, viewingUsername, task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(ProfileActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();
+                configureDynamicButton(); // Refresh button state
+            } else {
+                Toast.makeText(ProfileActivity.this, "Failed to add friend.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void unfriendUser() {
@@ -155,16 +245,15 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Remove friend using username as key
-        mDatabase.child(currentUserID).child("friends").child(viewingUsername).removeValue()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ProfileActivity.this, "Friend removed!", Toast.LENGTH_SHORT).show();
-                        configureDynamicButton(); // Refresh button state
-                    } else {
-                        Toast.makeText(ProfileActivity.this, "Failed to remove friend.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        // Use ProfileManager to remove a friend
+        profileManager.unfriend(currentUserID, viewingUsername, task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(ProfileActivity.this, "Friend removed!", Toast.LENGTH_SHORT).show();
+                configureDynamicButton(); // Refresh button state
+            } else {
+                Toast.makeText(ProfileActivity.this, "Failed to remove friend.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void checkFriendStatus(FriendStatusCallback callback) {
@@ -173,15 +262,12 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        mDatabase.child(currentUserID).child("friends").child(viewingUsername).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult().exists()) {
-                        callback.onStatusChecked(true);
-                    } else {
-                        callback.onStatusChecked(false);
-                    }
-                });
+        // Use ProfileManager to check friend status
+        profileManager.isFriend(currentUserID, viewingUsername, isFriend -> {
+            callback.onStatusChecked(isFriend);
+        });
     }
+
 
     interface FriendStatusCallback {
         void onStatusChecked(boolean isFriend);
@@ -200,7 +286,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (id == R.id.action_logout) {
             Log.d("ProfileActivity", "Logout clicked");
-            mAuth.signOut();
+            profileManager.getmAuth().signOut();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             //send login success toast message

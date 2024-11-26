@@ -72,6 +72,7 @@ dependencies {
     // For white box
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:4.8.0")
+    testImplementation ("org.mockito:mockito-inline:4.8.0")
 
     // For for black box
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
