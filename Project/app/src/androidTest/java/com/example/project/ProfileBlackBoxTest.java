@@ -52,6 +52,9 @@ public class ProfileBlackBoxTest {
         onView(withText(R.string.action_profile)).perform(click());
         TimeUnit.SECONDS.sleep(1);
         onView(withId(R.id.usernamefield)).check(matches(isDisplayed()));
+        TimeUnit.SECONDS.sleep(1);
+        onView(withId(R.id.namefield)).check(matches(withText("joebiden")));
+
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.lists_button), withText("My Lists"),
