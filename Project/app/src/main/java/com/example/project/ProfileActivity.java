@@ -129,6 +129,9 @@ public class ProfileActivity extends AppCompatActivity {
                     userView.setText(String.valueOf(results.get("username")));
                     nameView.setText(String.valueOf(results.get("name")));
                     zipView.setText(String.valueOf(results.get("zipcode")));
+                    viewingUsername = String.valueOf(results.get("name"));
+//                     Configure dynamic button after retrieving the username
+                    configureDynamicButton();
                 } else {
                     Log.d("ProfileActivity", "No user found");
                 }
@@ -263,9 +266,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         // Use ProfileManager to check friend status
-        profileManager.isFriend(currentUserID, viewingUsername, isFriend -> {
-            callback.onStatusChecked(isFriend);
-        });
+        profileManager.isFriend(currentUserID, viewingUsername, callback::onStatusChecked);
     }
 
 

@@ -132,11 +132,11 @@ public class FriendsBlackBoxTest {
         onView(withId(R.id.find_friends_button)).check(matches(isDisplayed()));
 
         // Click on valid friend
-        onView(withText("princessdiana")).perform(click());
+        onView(withText("niallh")).perform(click());
         TimeUnit.SECONDS.sleep(3);
 
         // Check that correct user profile has been opened
-        onView(withId(R.id.namefield)).check(matches(withText("princessdiana")));
+        onView(withId(R.id.namefield)).check(matches(withText("niallh")));
         onView(withId(R.id.dynamic_button)).check(matches(withText("unfriend")));
         TimeUnit.SECONDS.sleep(1);
 

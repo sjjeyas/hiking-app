@@ -63,35 +63,35 @@ public class ProfileActivityTest {
         assertEquals("testUserId", userId);
     }
 
-//    @Test
-//    public void testGetUserProfile() {
-//        // Mock Firebase task
-//        Task<DataSnapshot> mockTask = mock(Task.class);
-//        DataSnapshot mockSnapshot = mock(DataSnapshot.class);
-//        Map<String, Object> mockData = new HashMap<>();
-//        mockData.put("username", "testuser");
-//        mockData.put("name", "Test User");
-//        mockData.put("zipcode", "12345");
-//
-//        when(mockTask.isSuccessful()).thenReturn(true);
-//        when(mockTask.getResult()).thenReturn(mockSnapshot);
-//        when(mockSnapshot.getValue()).thenReturn(mockData);
-//
-//        doAnswer(invocation -> {
-//            OnCompleteListener<DataSnapshot> listener = invocation.getArgument(0);
-//            listener.onComplete(mockTask);
-//            return null;
-//        }).when(mockUserRef).get();
-//
-//        // Verify that getUserProfile fetches data successfully
-//        profileManager.getUserProfile("testUserId", task -> {
-//            assertTrue(task.isSuccessful());
-//            DataSnapshot snapshot = task.getResult();
-//            assertEquals("testuser", ((Map) snapshot.getValue()).get("username"));
-//        });
-//
-//        verify(mockUserRef, times(1)).get();
-//    }
+    @Test
+    public void testGetUserProfile() {
+        // Mock Firebase task
+        Task<DataSnapshot> mockTask = mock(Task.class);
+        DataSnapshot mockSnapshot = mock(DataSnapshot.class);
+        Map<String, Object> mockData = new HashMap<>();
+        mockData.put("username", "testuser");
+        mockData.put("name", "Test User");
+        mockData.put("zipcode", "12345");
+
+        when(mockTask.isSuccessful()).thenReturn(true);
+        when(mockTask.getResult()).thenReturn(mockSnapshot);
+        when(mockSnapshot.getValue()).thenReturn(mockData);
+
+        doAnswer(invocation -> {
+            OnCompleteListener<DataSnapshot> listener = invocation.getArgument(0);
+            listener.onComplete(mockTask);
+            return null;
+        }).when(mockUserRef).get();
+
+        // Verify that getUserProfile fetches data successfully
+        profileManager.getUserProfile("testUserId", task -> {
+            assertTrue(task.isSuccessful());
+            DataSnapshot snapshot = task.getResult();
+            assertEquals("testuser", ((Map) snapshot.getValue()).get("username"));
+        });
+
+        verify(mockUserRef, times(1)).get();
+    }
 
 
 
