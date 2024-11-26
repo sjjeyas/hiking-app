@@ -93,6 +93,10 @@ public class FriendsBlackBoxTest {
                                 2)))
                 .atPosition(0);
         appCompatTextView2.perform(click());
+
+        TimeUnit.SECONDS.sleep(1);
+        onView(withId(R.id.namefield)).check(matches(withText("harrystyles")));
+
     }
 
     private static Matcher<View> childAtPosition(
