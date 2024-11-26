@@ -34,7 +34,7 @@ public class GroupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button join;
     private String user ;
-    private String groupname = "SoCal Hikers";
+    private String groupname;
     private boolean joined = false;
     private String displayname;
 
@@ -56,45 +56,12 @@ public class GroupActivity extends AppCompatActivity {
         }
 
         join = (Button)findViewById(R.id.join_button);
-        /*
-
-        join = (Button)findViewById(R.id.join_button);
-        HashMap<String, Object> data = new HashMap<String,Object>();
-        HashMap<String, Object> members = new HashMap<String,Object>();
-        members.put("sneha", true);
-        members.put("nicole", true);
-        members.put("yellow", true);
-        members.put("orange", true);
-        members.put("america", true);
-        members.put("louis", true);
-        members.put("niall", true);
-        members.put("harry", true);
-        members.put("", true);
-
-        data.put("trail", "Aimee's Loop");
-        data.put("name", "NewGroup");
-        data.put("members", members);
-        Log.d("GroupActivity", "Write error");
-
-
-        mDatabase.child("NewGroup").setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("GroupActivity", "Write Successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("GroupActivity", "Write failure");
-                    }
-                });
-
-        */
         String u = getIntent().getStringExtra("user");
         if (u != null){
             user = u;
         }
+        groupname = getIntent().getStringExtra("groupname");
+
         DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
         Map<String, String> data = new HashMap<>();
         names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -123,62 +90,7 @@ public class GroupActivity extends AppCompatActivity {
                                         join.setOnClickListener(new View.OnClickListener(){
                                             @Override
                                             public void onClick(View v){
-                                                if(!joined){
-                                                    Log.d("GroupActivity", "trying to join group");
-                                                    boolean success = g.joinGroup(displayname);
-                                                    HashMap<String, Object> members = g.members;
-                                                    mDatabase.child(groupname).child("members").setValue(members);
-                                                    if (success){
-                                                        Toast.makeText(getApplicationContext(),
-                                                                        "Joined group!!",
-                                                                        Toast.LENGTH_LONG)
-                                                                .show();
-                                                        Log.d("GroupActivity", "Loaded group: " + g.name);
-                                                        TextView name = findViewById(R.id.groupname);
-                                                        TextView location = findViewById(R.id.trailname);
-                                                        TextView users = findViewById(R.id.userlist);
-                                                        name.setText(g.name);
-                                                        location.setText(g.trail);
-                                                        String r = "";
-                                                        Set<String> keys = g.members.keySet();
-                                                        for (String k : g.members.keySet()){
-                                                            r += k + "\n";
-                                                        }
-                                                        users.setText(r);
-                                                        join.setText("LEAVE");
-                                                        joined=true;
-                                                    }else{
-                                                        Toast.makeText(getApplicationContext(),
-                                                                        "Too many people in group!!",
-                                                                        Toast.LENGTH_LONG)
-                                                                .show();
-                                                    }
-                                                }
-                                                else{
-                                                    Log.d("GroupActivity", "leaving group");
-                                                    g.leaveGroup(displayname);
-                                                    HashMap<String, Object> members = g.members;
-                                                    mDatabase.child(groupname).child("members").setValue(members);
-                                                    Toast.makeText(getApplicationContext(),
-                                                                    "Left group!!",
-                                                                    Toast.LENGTH_LONG)
-                                                            .show();
-                                                    Log.d("GroupActivity", "Loaded group: " + g.name);
-                                                    TextView name = findViewById(R.id.groupname);
-                                                    TextView location = findViewById(R.id.trailname);
-                                                    TextView users = findViewById(R.id.userlist);
-                                                    name.setText(g.name);
-                                                    location.setText(g.trail);
-                                                    String r = "";
-                                                    Set<String> keys = g.members.keySet();
-                                                    for (String k : g.members.keySet()){
-                                                        r += k + "\n";
-                                                    }
-                                                    users.setText(r);
-                                                    join.setText("JOIN");
-                                                    joined = false;
-                                                }
-
+                                                joinGroup(g);
                                             }
                                         });
                                         Log.d("GroupActivity", "Loaded group: " + g.name);
@@ -208,6 +120,64 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void joinGroup(Group g){
+        if(!joined){
+            Log.d("GroupActivity", "trying to join group");
+            boolean success = g.joinGroup(displayname);
+            HashMap<String, Object> members = g.members;
+            mDatabase.child(groupname).child("members").setValue(members);
+            if (success){
+                Toast.makeText(getApplicationContext(),
+                                "Joined group!!",
+                                Toast.LENGTH_LONG)
+                        .show();
+                Log.d("GroupActivity", "Loaded group: " + g.name);
+                TextView name = findViewById(R.id.groupname);
+                TextView location = findViewById(R.id.trailname);
+                TextView users = findViewById(R.id.userlist);
+                name.setText(g.name);
+                location.setText(g.trail);
+                String r = "";
+                Set<String> keys = g.members.keySet();
+                for (String k : g.members.keySet()){
+                    r += k + "\n";
+                }
+                users.setText(r);
+                join.setText("LEAVE");
+                joined=true;
+            }else{
+                Toast.makeText(getApplicationContext(),
+                                "Too many people in group!!",
+                                Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+        else{
+            Log.d("GroupActivity", "leaving group");
+            g.leaveGroup(displayname);
+            HashMap<String, Object> members = g.members;
+            mDatabase.child(groupname).child("members").setValue(members);
+            Toast.makeText(getApplicationContext(),
+                            "Left group!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            Log.d("GroupActivity", "Loaded group: " + g.name);
+            TextView name = findViewById(R.id.groupname);
+            TextView location = findViewById(R.id.trailname);
+            TextView users = findViewById(R.id.userlist);
+            name.setText(g.name);
+            location.setText(g.trail);
+            String r = "";
+            Set<String> keys = g.members.keySet();
+            for (String k : g.members.keySet()){
+                r += k + "\n";
+            }
+            users.setText(r);
+            join.setText("JOIN");
+            joined = false;
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

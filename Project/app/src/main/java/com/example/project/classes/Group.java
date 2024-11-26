@@ -13,9 +13,8 @@ public class Group {
     public String trail;
     public int capacity;
 
-    public Group(String n, String r, String t, int c){
+    public Group(String n, String t, int c){
         name = n;
-        members.put(r, true);
         trail = t;
         capacity = c;
     }

@@ -59,6 +59,7 @@ public class makeGroupActivity extends AppCompatActivity {
         }else {
             user = mAuth.getCurrentUser().getUid();
         }
+
         back = (Button) findViewById(R.id.back_button);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,43 +86,52 @@ public class makeGroupActivity extends AppCompatActivity {
     }
 
     private void createGroup(){
-        String name = groupNameInput.getText().toString();
-        String trailName = trailNameInput.getText().toString();
-        int capacity = Integer.parseInt(capacityInput.getText().toString());
-        Group newGroup = new Group(name, user, trailName, capacity);
+        try {
+            String name = groupNameInput.getText().toString();
+            String trailName = trailNameInput.getText().toString();
+            int capacity = Integer.parseInt(capacityInput.getText().toString());
+//            Group newGroup = new Group(name, trailName, capacity);
+//            newGroup.joinGroup(user);
 
-        mDatabase.push().setValue(newGroup).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.e("MakeGroupActivity", "Group added successfully");
-                Toast.makeText(this, "Group created successfully", Toast.LENGTH_SHORT).show();
-                goToGroup(); // Navigate after successful save
-            } else {
-                Log.e("MakeGroupActivity", "Error adding group", task.getException());
-                Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
-            }
-        });
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(user); // "users/{userID}"
+            userRef.child("name").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult().getValue() != null) {
+                    String displayName = task.getResult().getValue(String.class);
 
+                    // Create a Group object with the fetched display name
+                    Group newGroup = new Group(name, trailName, capacity);
+                    newGroup.joinGroup(displayName); // Use the fetched display name instead of userID
 
-//        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()){
-//                    Log.e("makeGroupActivity", "Error getting data1", task.getException());
-//                    //
-//                }else{
-//                    if(task.getResult().getValue() != null){
-//                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
-//                        Log.e("makeGroupActivity", "Writing for UID2 " + user);
-//                        String name = groupNameInput.getText().toString();
-//                        String trailName = trailNameInput.getText().toString();
-//                        int capacity = Integer.parseInt(capacityInput.getText().toString());
-//                        Group newGroup = new Group(name, user, trailName, capacity);
-//                    }
+                    // Save the group to the database
+                    mDatabase.push().setValue(newGroup).addOnCompleteListener(groupTask -> {
+                        if (groupTask.isSuccessful()) {
+                            Toast.makeText(this, "Group created successfully.", Toast.LENGTH_SHORT).show();
+                            goToGroup(); // Navigate after successful save
+                        } else {
+                            Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
+                            Log.e("MakeGroupActivity", "Error saving group: ", groupTask.getException());
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "Unable to fetch user name.", Toast.LENGTH_SHORT).show();
+                    Log.e("MakeGroupActivity", "Failed to fetch name: ", task.getException());
+                }
+            });
+//            mDatabase.push().setValue(newGroup).addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    Log.e("MakeGroupActivity", "Group added successfully");
+//                    Toast.makeText(this, "Group created successfully", Toast.LENGTH_SHORT).show();
+//                    goToGroup(); // Navigate after successful save
+//                } else {
+//                    Log.e("MakeGroupActivity", "Error adding group", task.getException());
+//                    Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
 //                }
-//            }
-//        });
-
-        goToGroup();
+//            });
+//            goToGroup();
+        }
+        catch (NumberFormatException e){
+            Toast.makeText(this, "Please enter a number for capacity.", Toast.LENGTH_SHORT).show();
+        }
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource
