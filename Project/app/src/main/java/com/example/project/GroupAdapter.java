@@ -56,8 +56,8 @@ public class GroupAdapter extends ArrayAdapter<Group> {
 
             groupName.setText(group.name);
             groupTrail.setText(group.trail);
-            groupCapacity.setText(group.getCapacityText());
-            groupMembers.setText(group.getMembersText());
+            groupCapacity.setText(getCapacityText(group));
+            groupMembers.setText(getMembersText(group));
         }
 
         convertView.setOnClickListener(view ->{
@@ -81,6 +81,22 @@ public class GroupAdapter extends ArrayAdapter<Group> {
     @Override
     public Group getItem(int position) {
         return filteredGroups.get(position);
+    }
+
+    public String getCapacityText(Group group) {
+        return String.format("%d/%d", group.members.size(), group.capacity);
+    }
+
+    public String getMembersText(Group group) {
+        StringBuilder membersText = new StringBuilder();
+        for (String member : group.members.keySet()){
+            if (membersText.length() > 0) {
+                membersText.append(", "); // Add a comma before appending next name
+            }
+            membersText.append(member);
+        }
+
+        return membersText.toString();
     }
 
     @NonNull

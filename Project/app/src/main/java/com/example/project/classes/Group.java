@@ -36,21 +36,4 @@ public class Group {
     }
 
     public String getName() {return name;}
-
-    @SuppressLint("DefaultLocale")
-    public String getCapacityText() {
-        return String.format("%d/%d", members.size(), capacity);
-    }
-
-    public String getMembersText() {
-        StringBuilder membersText = new StringBuilder();
-        for (String member : members.keySet()){
-            if (membersText.length() > 0) {
-                membersText.append(", "); // Add a comma before appending next name
-            }
-            membersText.append(member);
-        }
-
-        return membersText.toString();
-    }
 }
