@@ -47,7 +47,7 @@ public class makeGroupActivity extends AppCompatActivity {
         groupNameInput = findViewById(R.id.groupNameInput);
         trailNameInput = findViewById(R.id.trailNameInput);
         capacityInput = findViewById(R.id.capacityInput);
-        mDatabase = FirebaseDatabase.getInstance().getReference("groups");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -64,7 +64,7 @@ public class makeGroupActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToGroup();
+                goToGroups();
             }
         });
         submit = (Button) findViewById(R.id.submit_button);
@@ -76,63 +76,113 @@ public class makeGroupActivity extends AppCompatActivity {
             }
         });
     }
-    private void goToGroup(){
+    private void goToGroup(String groupName){
+
         Intent intent = new Intent(this, GroupActivity.class);
 
-        intent.putExtra("groupname", groupNameInput.getText().toString());
+        intent.putExtra("groupname", groupName);
+        intent.putExtra("user", user);
+
+        this.startActivity(intent);
+    }
+    private void goToGroups(){
+        Intent intent = new Intent(this, GroupSearchActivity.class);
+
         intent.putExtra("user", user);
 
         this.startActivity(intent);
     }
 
-    private void createGroup(){
-        try {
-            String name = groupNameInput.getText().toString();
-            String trailName = trailNameInput.getText().toString();
-            int capacity = Integer.parseInt(capacityInput.getText().toString());
-//            Group newGroup = new Group(name, trailName, capacity);
-//            newGroup.joinGroup(user);
-
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(user); // "users/{userID}"
-            userRef.child("name").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult().getValue() != null) {
-                    String displayName = task.getResult().getValue(String.class);
-
-                    // Create a Group object with the fetched display name
-                    Group newGroup = new Group(name, trailName, capacity);
-                    newGroup.joinGroup(displayName); // Use the fetched display name instead of userID
-
-                    // Save the group to the database
-                    mDatabase.push().setValue(newGroup).addOnCompleteListener(groupTask -> {
-                        if (groupTask.isSuccessful()) {
-                            Toast.makeText(this, "Group created successfully.", Toast.LENGTH_SHORT).show();
-                            goToGroup(); // Navigate after successful save
-                        } else {
-                            Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
-                            Log.e("MakeGroupActivity", "Error saving group: ", groupTask.getException());
-                        }
-                    });
+    private void createGroup() {
+        Map<String, Object> data = new HashMap<>();
+        mDatabase.child("groups").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("makeGroupActivity", "Error getting data", task.getException());
                 } else {
-                    Toast.makeText(this, "Unable to fetch user name.", Toast.LENGTH_SHORT).show();
-                    Log.e("MakeGroupActivity", "Failed to fetch name: ", task.getException());
+                    if (task.getResult().getValue() != null) {
+                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+
+                        String name = groupNameInput.getText().toString();
+                        String trail = trailNameInput.getText().toString();
+                        int capacity = Integer.parseInt(capacityInput.getText().toString());
+
+                        data.put("name", name);
+                        data.put("trail", trail);
+                        data.put("capacity", capacity);
+                        Log.d("makeGroupActivity", "HERE AT 1");
+                        mDatabase.child("groups").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("makeListActivity", "Error getting data2", task.getException());
+                                } else {
+                                    if (task.getResult().getValue() != null) {
+                                        results.put(name, data);
+                                        mDatabase.child("groups").setValue(results).addOnSuccessListener(aVoid -> {
+                                                    Log.d("makeGroupActivity", "Group added!");
+                                                    Toast.makeText(getApplicationContext(),
+                                                                    "Group creation successful!",
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e("makeGroupActivity", "Error adding group", e);
+                                                });
+                                    } else {
+                                        Map<String, Object> results = new HashMap<>();
+                                        results.put(name, data);
+                                        mDatabase.child("groups").child(name).setValue(results)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.d("makeListReviewActivity", "List added successfully3");
+                                                    Toast.makeText(getApplicationContext(),
+                                                                    "List creation successful!",
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
+
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e("makeListActivity", "Error adding list3", e);
+                                                });
+
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        Log.e("makeGroupActivity", "Error getting data", task.getException());
+                        String name = groupNameInput.getText().toString();
+                        String trail = trailNameInput.getText().toString();
+                        int capacity = Integer.parseInt(capacityInput.getText().toString());
+
+                        data.put("name", name);
+                        data.put("trail", trail);
+                        data.put("capacity", capacity);
+                        Log.d("makeGroupActivity", "HERE AT 2");
+                        Map<String, Object> groups = new HashMap<>();
+                        groups.put(name, data);
+                        mDatabase.setValue(groups)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("makeGroupActivity", "Group added successfully1");
+                                    Toast.makeText(getApplicationContext(),
+                                                    "Group creation successful!",
+                                                    Toast.LENGTH_LONG)
+                                            .show();
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("makeGroupActivity", "Error adding group", e);
+                                });
+                    }
+
                 }
-            });
-//            mDatabase.push().setValue(newGroup).addOnCompleteListener(task -> {
-//                if (task.isSuccessful()) {
-//                    Log.e("MakeGroupActivity", "Group added successfully");
-//                    Toast.makeText(this, "Group created successfully", Toast.LENGTH_SHORT).show();
-//                    goToGroup(); // Navigate after successful save
-//                } else {
-//                    Log.e("MakeGroupActivity", "Error adding group", task.getException());
-//                    Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            goToGroup();
-        }
-        catch (NumberFormatException e){
-            Toast.makeText(this, "Please enter a number for capacity.", Toast.LENGTH_SHORT).show();
-        }
+
+            }
+        });
+        goToGroup(groupNameInput.getText().toString());
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource
         return true;
