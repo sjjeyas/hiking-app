@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,8 @@ public class makeListActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText nameEditText;
     private EditText descriptionEditText;
+    private String permission = "public";
+    private ToggleButton toggleBtn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -49,6 +52,26 @@ public class makeListActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        toggleBtn = (ToggleButton) findViewById(R.id.idBtnToggle);
+
+        if (toggleBtn.isChecked()) {
+            permission = "public";
+        } else {
+            permission = "private";
+        }
+
+        toggleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (toggleBtn.isChecked()) {
+                    permission = "public";
+                } else {
+                    permission = "private";
+                }
+            }
+        });
+
 
         if (u != null){
             user = u;
@@ -93,6 +116,7 @@ public class makeListActivity extends AppCompatActivity {
                         String description = descriptionEditText.getText().toString();
                         data.put("name", name);
                         data.put("description", description);
+                        data.put("permission", String.valueOf(permission));
                         Log.d("makeListActivity", name + "1");
                         mDatabase.child(user).child("lists").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
@@ -145,6 +169,7 @@ public class makeListActivity extends AppCompatActivity {
                         String description = descriptionEditText.getText().toString();
                         data.put("name", name);
                         data.put("description", description);
+                        data.put("permission", permission);
                         Log.d("makeListActivity", name + "2");
                         Map<String, Object> lists = new HashMap<>();
                         lists.put(name, data);

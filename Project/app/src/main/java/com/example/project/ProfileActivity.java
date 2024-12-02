@@ -64,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         currentUserID = profileManager.getCurrentUserId();
         setUserID();
 
+
         // Setup toolbar
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -161,16 +162,28 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void configureListsButton() {
+        if (viewingUserID == null || currentUserID == null) {
+            Log.e("ProfileActivity", "viewingUserID or currentUserID is null");
+        } else {
+            Log.e("ProfileActivity", "viewingUserID: " + viewingUserID + ", currentUserID: " + currentUserID);
+        }
         if (viewingUserID.equals(currentUserID)) {
             myListsButton.setText("My Lists");
+            myListsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, myListsActivity.class);
+                intent.putExtra("user", viewingUserID);
+                startActivity(intent);
+                Log.e("ProfileActivity", "myLists trying to load");
+            });
         } else {
             myListsButton.setText("View Public Lists");
+            myListsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, friendsListsActivity.class);
+                intent.putExtra("user", viewingUserID);
+                startActivity(intent);
+                Log.e("ProfileActivity", "friendsLists trying to load");
+            });
         }
-        myListsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, myListsActivity.class);
-            intent.putExtra("user", viewingUserID);
-            startActivity(intent);
-        });
     }
 
 //    private void addFriend() {

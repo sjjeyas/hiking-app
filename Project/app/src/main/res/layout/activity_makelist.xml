@@ -78,7 +78,7 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user"
         app:layout_constraintVertical_bias="0.5"
@@ -137,7 +137,26 @@
             android:ems="15"
             android:inputType="text"
             android:textSize="15sp" />
+
     </LinearLayout>
+
+
+    <ToggleButton
+        android:id="@+id/idBtnToggle"
+        android:layout_width="141dp"
+        android:layout_height="53dp"
+        android:layout_centerInParent="true"
+        android:background="@color/dark_green"
+        android:padding="10dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textOff="Private"
+        android:textOn="Public"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.258" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

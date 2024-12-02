@@ -1,5 +1,6 @@
 package com.example.project;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,130 +24,140 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class ListActivity extends AppCompatActivity {
-    private String user;
-    private String listname;
-    private TextView nameView;
-    private Button back;
+public class friendsListsActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
+    private String user;
     private FirebaseAuth mAuth;
-    private LinearLayout trailslist;
+    private Button back;
+    private String displayname;
+    private TextView dNameView;
+    //private TextView listsView;
+    private Button newList;
+    private LinearLayout listdisplay;
     private String view;
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
-        nameView = findViewById(R.id.listname);
-        mAuth = FirebaseAuth.getInstance();
+        setContentView(R.layout.activity_friendslists);
+        Log.e("friendsListsActivity", "friendsLists entered");
 
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        mAuth = FirebaseAuth.getInstance();
 
-        trailslist = findViewById(R.id.trailslayout);
-
+        user = mAuth.getCurrentUser().getUid();
         String u = getIntent().getStringExtra("user");
         if (u != null){
-            user = u;
-        }else if (mAuth != null){
-            user = mAuth.getCurrentUser().getUid();
+            view = u;
         }else {
-            user = "GKV2jTHo8mVcoaBTXbuP9whvCys2";
+            view = mAuth.getCurrentUser().getUid();
         }
-        String v = getIntent().getStringExtra("view");
-        if (v != null){
-            view = v;
-        }else {
-            view = user;
-        }
-        String n = getIntent().getStringExtra("listname");
-        if (n != null){
-            listname = n;
-        }
-        nameView.setText(listname);
 
+
+
+        dNameView = findViewById(R.id.user);
+        //listsView = findViewById(R.id.mylists);
+        listdisplay = (LinearLayout) findViewById(R.id.trailslayout);
         back = (Button) findViewById(R.id.back_button);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToLists();
+                goToProfile();
             }
         });
-        Log.e("ListActivity", "Db load of " + listname);
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        mDatabase.child(view).child("lists").child(listname).child("trails").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+
+
+        DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
+        Map<String, String> data = new HashMap<>();
+        names.child(view).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()){
+                    Log.e("friendsListsActivity", "Error getting data", task.getException());
+                }else{
+                    if(task.getResult().getValue() != null){
+                        displayname = (String) task.getResult().getValue();
+                        Log.e("friendsListsActivity", "Lists for name " + displayname);
+                        dNameView.setText(String.valueOf(displayname+"'s Lists"));
+                    }
+                    else{
+                        Log.e("friendsListsActivity", "Error getting data", task.getException());
+                    }
+                }
+
+            }
+        });
+        names.child(view).child("lists").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()){
-                    Log.e("ListActivity", "Error getting data1", task.getException());
-                    TextView noTrails = new TextView(getApplicationContext());
-                    noTrails.setText("No trails able to load!");
-                    noTrails.setTextColor(R.color.black);
-                    trailslist.addView(noTrails);
-                    //
+                    Log.e("friendsListsActivity", "Error getting data", task.getException());
                 }else{
                     if(task.getResult().getValue() != null){
-                        Map<String, Object> trailsresults = (Map<String, Object>) task.getResult().getValue();
-                        Log.e("ListActivity", String.valueOf(trailsresults));
-                        if (trailsresults != null) {
-
-                            String r = "";
-                            Set<String> keys = trailsresults.keySet();
-                            for (String k : trailsresults.keySet()){
-                                TextView newTextView = new TextView(getApplicationContext());
-                                Log.d("ListActivity", k);
-                                newTextView.setText(String.valueOf(k));
-                                newTextView.setHeight(175);
-                                newTextView.setTextColor(R.color.black);
-                                newTextView.setTextSize(20);
-                                newTextView.setOnClickListener(new View.OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(View v)
-                                    {
-                                        goToTrail(k);
-                                    }
-                                });
-                                trailslist.addView(newTextView);
+                        Map<String, Object> lists = (Map<String, Object>) task.getResult().getValue();
+                        Log.e("friendsListsActivity", String.valueOf(lists));
+                        String r = "";
+                        List<String> TLists = new ArrayList<>();
+                        for (Map.Entry<String, Object> entry : lists.entrySet()){
+                            HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
+                            String name = (String) reviewBody.get("name");
+                            if (view.equals(mAuth.getUid())){
+                                TLists.add(name);
+                            }else {
+                                if ("public".equals((String) reviewBody.get("permission"))) {
+                                    TLists.add(name);
+                                }
                             }
-
-                        } else {
-                            Log.d("ListActivity", "No trail found");
                         }
+                        for (String l : TLists){
+                            TextView newTextView = new TextView(getApplicationContext());
 
+                            newTextView.setText(l);
+                            newTextView.setHeight(175);
+                            newTextView.setTextColor(R.color.black);
+                            newTextView.setTextSize(20);
+                            newTextView.setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    goToList(l);
+                                }
+                            });
+                            listdisplay.addView(newTextView);
+                        }
+                        //listsView.setText(r);
+                        //listsView.setMovementMethod(new ScrollingMovementMethod());
                     }
                     else{
-                        Log.e("ListActivity", "Error getting data2", task.getException());
+                        Log.e("friendsListsActivity", "Error getting data", task.getException());
                     }
                 }
 
             }
         });
     }
-    private void goToLists(){
-        if (view.equals(user)){
-            Intent intent = new Intent(this, myListsActivity.class);
-            intent.putExtra("user", user);
-            this.startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, friendsListsActivity.class);
-            intent.putExtra("user", view);
-            this.startActivity(intent);
-        }
-
+    private void goToProfile(){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("user", view);
+        Log.e("friendsListsActivity", "going to user " + user + "'s profile");
+        this.startActivity(intent);
     }
-    private void goToTrail(String t){
-        Intent intent = new Intent(this, TrailActivity.class);
+    private void goToList(String l){
+        Intent intent = new Intent (this, ListActivity.class);
+        intent.putExtra("listname", l);
         intent.putExtra("user", user);
-        intent.putExtra("trailname", t);
+        intent.putExtra("view", view);
         this.startActivity(intent);
     }
     public boolean onCreateOptionsMenu(Menu menu) {

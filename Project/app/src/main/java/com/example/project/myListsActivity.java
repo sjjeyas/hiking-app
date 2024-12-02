@@ -57,6 +57,8 @@ public class myListsActivity extends AppCompatActivity {
             user = mAuth.getCurrentUser().getUid();
         }
 
+
+
         dNameView = findViewById(R.id.user);
         //listsView = findViewById(R.id.mylists);
         listdisplay = (LinearLayout) findViewById(R.id.trailslayout);
@@ -74,6 +76,7 @@ public class myListsActivity extends AppCompatActivity {
                 makeList();
             }
         });
+
 
         DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
         Map<String, String> data = new HashMap<>();
@@ -112,6 +115,7 @@ public class myListsActivity extends AppCompatActivity {
                             HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
                             String name = (String) reviewBody.get("name");
                             TLists.add(name);
+
                         }
                         for (String l : TLists){
                             TextView newTextView = new TextView(getApplicationContext());
