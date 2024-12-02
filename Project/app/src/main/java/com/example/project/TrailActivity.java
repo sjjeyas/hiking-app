@@ -29,6 +29,7 @@ public class TrailActivity extends AppCompatActivity {
     private Button seereview;
     private Button addreview;
     private FirebaseAuth mAuth;
+    private Button addList;
 
     /*
     public TrailActivity(String n){
@@ -63,6 +64,14 @@ public class TrailActivity extends AppCompatActivity {
         intent.putExtra("user", userID);
         startActivity(intent);
     }
+    public void pickList(){
+        Intent intent = new Intent(this, pickListActivity.class);
+        intent.putExtra("trailname", trail);
+        String userID ="";
+        userID = FirebaseAuth.getInstance().getUid();
+        intent.putExtra("user", userID);
+        startActivity(intent);
+    }
 
 
 
@@ -85,6 +94,15 @@ public class TrailActivity extends AppCompatActivity {
         }else {
             trail = "Aimee's Loop";
         }
+
+        addList = (Button) findViewById(R.id.list_button);
+        addList.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("TrailActivity", "picklist button pushed");
+                pickList();
+            }
+        });
 
         addreview = (Button) findViewById(R.id.addreview_button);
         seereview = (Button) findViewById(R.id.seereview_button);
