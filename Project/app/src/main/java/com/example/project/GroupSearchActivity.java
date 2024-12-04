@@ -6,6 +6,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ public class GroupSearchActivity extends AppCompatActivity {
         searchList.setAdapter(groupAdapter);
 
         SearchView sv = findViewById(R.id.searchView);
+
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

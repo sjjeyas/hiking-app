@@ -41,14 +41,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:background="@color/brown"
+        android:clickable="true"
+        android:queryHint="Search here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        android:queryHint="Search here"
-        >
-
-    </androidx.appcompat.widget.SearchView>
-
+        app:iconifiedByDefault="false"
+    />
     <ListView
         android:id="@+id/searchList"
         android:layout_width="0dp"

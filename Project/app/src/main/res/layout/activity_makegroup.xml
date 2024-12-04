@@ -34,7 +34,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/makeGroupText"
         android:layout_width="301dp"
         android:layout_height="76dp"
         android:text="Creating a new group..."
@@ -148,7 +148,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintTop_toBottomOf="@+id/makeGroupText"
         tools:ignore="MissingConstraints">
 
         <TextView
