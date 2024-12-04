@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseAuth mAuth;
 
     private LatLng defaultLocation;
+    private LatLng userlocation;
     private DatabaseReference databaseReference;
     GoogleMap mMap;
 
@@ -77,19 +78,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Show the appropriate toolbar based on login status
         updateToolbarBasedOnLoginStatus(currentUser);
 
-//        // Affix navbar (NO LONGER NEEDED, HARD CODED MARGIN)
-//        ConstraintLayout constraintLayout = findViewById(R.id.main);
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(constraintLayout);
-//
-//        if (currentUser != null) {
-//            constraintSet.connect(R.id.mainContainer, ConstraintSet.TOP, R.id.userToolbar, ConstraintSet.BOTTOM);
-//        } else {
-//            constraintSet.connect(R.id.mainContainer, ConstraintSet.TOP, R.id.guestToolbar, ConstraintSet.BOTTOM);
-//        }
-//
-//        // Apply the updated constraints
-//        constraintSet.applyTo(constraintLayout);
+        defaultLocation = getLocationFromZipcode("90007");
+
+        //set user location based off if user is logged in or not
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String zipcode = snapshot.child("zipcode").getValue(String.class); // Retrieve zipcode
+                        Log.d("MainActivity", "User zipcode pulled from database: " + zipcode);
+
+                        if (zipcode != null) {
+                            userlocation = getLocationFromZipcode(zipcode); // Convert zipcode to LatLng
+                            Log.d("MainActivity", "User location set from zipcode: " + userlocation);
+
+                            // Update the map after user location is set
+                            if (mMap != null) {
+                                updateMapWithNewLocation(userlocation);
+                            }
+                        } else {
+                            Log.e("MainActivity", "Zipcode is null for user.");
+                        }
+                    } else {
+                        Log.e("MainActivity", "No user data found.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.e("MainActivity", "Database error: " + error.getMessage());
+                }
+            });
+        } else {
+            Log.d("MainActivity", "No user is logged in. Using default location.");
+            userlocation = null;
+        }
 
         // Get a handle to the fragment and register the callback.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -114,7 +141,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         currentLocationButton.setOnClickListener(v -> {
-            if (defaultLocation != null) {
+            if (userlocation != null) {
+                updateMapWithNewLocation(userlocation);
+            }
+            else {
                 updateMapWithNewLocation(defaultLocation);
             }
         });
@@ -124,15 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Get default location from the zipcode
-        String zipcode = "90007";
-        defaultLocation = getLocationFromZipcode(zipcode);
-
-        if (defaultLocation != null) {
+        if (userlocation != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userlocation, 10));
+            fetchTrailsAndDisplayMarkers(userlocation); //displays correct markers of nearby trails
+        } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
             fetchTrailsAndDisplayMarkers(defaultLocation); //displays correct markers of nearby trails
-        } else {
-            Toast.makeText(this, "Unable to find default location.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -201,21 +228,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     LatLng getLocationFromZipcode(String zipcode) {
+        Log.d("MainActivity", "Attempting to fetch location for ZIP code: " + zipcode);
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
+                Log.d("MainActivity", "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
                 return new LatLng(address.getLatitude(), address.getLongitude());
+            } else {
+                Log.e("MainActivity", "No results from Geocoder for ZIP code: " + zipcode);
             }
         } catch (IOException e) {
-            Log.e("TAG", "Geocoder failed: " + e.getMessage());
+            Log.e("MainActivity", "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
         }
         return null;
     }
 
     private LatLng getLocationFromCity(String city) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(this, Locale.US);
         try {
             List<Address> addresses = geocoder.getFromLocationName(city, 1);
             if (addresses != null && !addresses.isEmpty()) {
@@ -285,10 +316,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mAuth.signOut();
             // Update the toolbar to show guest navbar
             updateToolbarBasedOnLoginStatus(null);
+            userlocation = null;
 
             //send login success toast message
             Toast.makeText(this, "Logout Successful.", Toast.LENGTH_SHORT).show();
 
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_login) {
             Log.d("MainActivity", "Login button clicked");
