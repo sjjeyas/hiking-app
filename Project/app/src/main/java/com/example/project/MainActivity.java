@@ -39,6 +39,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import com.example.project.MainActivityLocation;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private Toolbar guestToolbar;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Show the appropriate toolbar based on login status
         updateToolbarBasedOnLoginStatus(currentUser);
 
-        defaultLocation = getLocationFromZipcode("90007");
+        defaultLocation = MainActivityLocation.getLocationFromZipcode(this, "90007");
 
         //set user location based off if user is logged in or not
         if (currentUser != null) {
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.d("MainActivity", "User zipcode pulled from database: " + zipcode);
 
                         if (zipcode != null) {
-                            userlocation = getLocationFromZipcode(zipcode); // Convert zipcode to LatLng
+                            userlocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this, zipcode);
                             Log.d("MainActivity", "User location set from zipcode: " + userlocation);
 
                             // Update the map after user location is set
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchButton.setOnClickListener(v -> {
             String newZipcode = zipInput.getText().toString();
             if (!newZipcode.isEmpty()) {
-                LatLng newLocation = getLocationFromZipcode(newZipcode);
+                LatLng newLocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this,newZipcode);
                 if (newLocation != null) {
                     updateMapWithNewLocation(newLocation);
                 } else {
@@ -181,9 +183,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     try {
                         Trail trail = trailSnapshot.getValue(Trail.class); // Deserialize each trail
                         if (trail != null) {
-                            LatLng trailLocation = getLocationFromCity(trail.location); // Assume 'location' stores city
+                            LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
                             if (trailLocation != null) {
-                                trail.zipcode = (int) calculateDistance(location, trailLocation); // Store distance temporarily
+                                trail.zipcode = (int) MainActivityLocation.calculateDistance(location, trailLocation);
                                 trails.add(trail);
 
                                 // Add this location to the bounds
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Display markers for the closest trails
                 for (Trail trail : closestTrails) {
-                    LatLng trailLocation = getLocationFromCity(trail.location);
+                    LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
                     if (trailLocation != null) {
                         mMap.addMarker(new MarkerOptions()
                                 .position(trailLocation)
@@ -227,48 +229,48 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    LatLng getLocationFromZipcode(String zipcode) {
-        Log.d("MainActivity", "Attempting to fetch location for ZIP code: " + zipcode);
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                Log.d("MainActivity", "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
-                return new LatLng(address.getLatitude(), address.getLongitude());
-            } else {
-                Log.e("MainActivity", "No results from Geocoder for ZIP code: " + zipcode);
-            }
-        } catch (IOException e) {
-            Log.e("MainActivity", "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private LatLng getLocationFromCity(String city) {
-        Geocoder geocoder = new Geocoder(this, Locale.US);
-        try {
-            List<Address> addresses = geocoder.getFromLocationName(city, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                return new LatLng(address.getLatitude(), address.getLongitude());
-            }
-        } catch (IOException e) {
-            Log.e("TAG", "Geocoder failed for city: " + city + " - " + e.getMessage());
-        }
-        return null;
-    }
-
-    private double calculateDistance(LatLng start, LatLng end) {
-        double earthRadius = 6371; // Radius of the Earth in kilometers
-        double dLat = Math.toRadians(end.latitude - start.latitude);
-        double dLng = Math.toRadians(end.longitude - start.longitude);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(start.latitude)) * Math.cos(Math.toRadians(end.latitude)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return earthRadius * c; // Distance in kilometers
-    }
+//    LatLng getLocationFromZipcode(String zipcode) {
+//        Log.d("MainActivity", "Attempting to fetch location for ZIP code: " + zipcode);
+//        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+//        try {
+//            List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
+//            if (addresses != null && !addresses.isEmpty()) {
+//                Address address = addresses.get(0);
+//                Log.d("MainActivity", "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
+//                return new LatLng(address.getLatitude(), address.getLongitude());
+//            } else {
+//                Log.e("MainActivity", "No results from Geocoder for ZIP code: " + zipcode);
+//            }
+//        } catch (IOException e) {
+//            Log.e("MainActivity", "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
+//        }
+//        return null;
+//    }
+//
+//    private LatLng getLocationFromCity(String city) {
+//        Geocoder geocoder = new Geocoder(this, Locale.US);
+//        try {
+//            List<Address> addresses = geocoder.getFromLocationName(city, 1);
+//            if (addresses != null && !addresses.isEmpty()) {
+//                Address address = addresses.get(0);
+//                return new LatLng(address.getLatitude(), address.getLongitude());
+//            }
+//        } catch (IOException e) {
+//            Log.e("TAG", "Geocoder failed for city: " + city + " - " + e.getMessage());
+//        }
+//        return null;
+//    }
+//
+//    private double calculateDistance(LatLng start, LatLng end) {
+//        double earthRadius = 6371; // Radius of the Earth in kilometers
+//        double dLat = Math.toRadians(end.latitude - start.latitude);
+//        double dLng = Math.toRadians(end.longitude - start.longitude);
+//        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+//                Math.cos(Math.toRadians(start.latitude)) * Math.cos(Math.toRadians(end.latitude)) *
+//                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+//        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//        return earthRadius * c; // Distance in kilometers
+//    }
 
     private void updateToolbarBasedOnLoginStatus(FirebaseUser currentUser) {
         if (currentUser != null) {
