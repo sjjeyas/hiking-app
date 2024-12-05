@@ -22,7 +22,7 @@ public class MainActivityLocation {
             List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                Log.d(TAG, "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
+//                Log.d(TAG, "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
                 return new LatLng(address.getLatitude(), address.getLongitude());
             } else {
                 Log.e(TAG, "No results from Geocoder for ZIP code: " + zipcode);
