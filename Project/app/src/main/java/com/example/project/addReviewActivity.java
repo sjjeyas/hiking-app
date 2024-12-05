@@ -36,6 +36,7 @@ public class addReviewActivity extends AppCompatActivity {
     private TextView reviewTextView;
     private TextView ratingTextView;
     private FirebaseAuth mAuth;
+    private String title;
 
 
     private void backToTrail(){
@@ -73,7 +74,7 @@ public class addReviewActivity extends AppCompatActivity {
         }else {
             user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42";
         }
-        String title = "Add Review: "+trail;
+        title = "Add Review: "+trail;
         addReviewView.setText(title);
         submit = findViewById(R.id.sendreview_button);
         back = (Button)findViewById(R.id.back_button);
@@ -85,6 +86,22 @@ public class addReviewActivity extends AppCompatActivity {
            }
         });
         mDatabase= FirebaseDatabase.getInstance().getReference("trails");
+        mDatabase.child(trail).child("reviews").child(user).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task){
+                if (!task.isSuccessful()){
+                    Log.e("addReviewActivity", "Error getting data", task.getException());
+                }else{
+                    if(task.getResult().getValue() != null){
+                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                        ratingTextView.setText(String.valueOf(results.get("rating")));
+                        reviewTextView.setText(String.valueOf(results.get("text")));
+                        title = "Edit Review: "+trail;
+                        addReviewView.setText(title);
+                    }
+                }
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +111,8 @@ public class addReviewActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 
     private void writeReview(){
@@ -121,10 +140,6 @@ public class addReviewActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     Log.e("addReviewActivity", "Error getting data", task.getException());
                                 } else {
-                                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-                                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
-                                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
-                                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
                                     if (task.getResult().getValue() != null){
                                         Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
                                         results.put(user, data);
