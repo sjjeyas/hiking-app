@@ -62,6 +62,7 @@ public class GroupActivity extends AppCompatActivity {
         }
         groupname = getIntent().getStringExtra("groupname");
 
+
         DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
         Map<String, String> data = new HashMap<>();
         names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

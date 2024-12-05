@@ -141,7 +141,8 @@ public class makeListActivity extends AppCompatActivity {
                                                     Log.e("makeListActivity", "Error adding list2", e);
                                                 });
                                         //
-                                    }else{
+                                    }
+                                    else{
                                         Map<String, Object> results = new HashMap<>();
                                         results.put(user, data);
                                         mDatabase.child(user).child("lists").child(name).setValue(results)
