@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,8 @@ public class ListActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private LinearLayout trailslist;
     private String view;
+    private ToggleButton perm;
+    private String permission;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -71,6 +74,33 @@ public class ListActivity extends AppCompatActivity {
             listname = n;
         }
         nameView.setText(listname);
+
+        perm = findViewById(R.id.permission_button);
+        if (view.equals(user)){
+            perm.setVisibility(View.VISIBLE);
+        }else{
+            perm.setVisibility(View.INVISIBLE);
+        }
+        perm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (perm.isChecked()) {
+                    permission = "public";
+                    changeVisibility();
+                    Toast.makeText(getApplicationContext(),
+                                    "List set to public!",
+                                    Toast.LENGTH_LONG)
+                            .show();
+                } else {
+                    permission = "private";
+                    changeVisibility();
+                    Toast.makeText(getApplicationContext(),
+                                    "List set to private!",
+                                    Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+        });
 
         back = (Button) findViewById(R.id.back_button);
         back.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +158,35 @@ public class ListActivity extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+    }
+    private void changeVisibility(){
+        DatabaseReference list = FirebaseDatabase.getInstance().getReference("users");
+        list.child(user).child("lists").child(listname).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()){
+                    Log.e("ListActivity", "Error getting data for permission change1", task.getException());
+                }else{
+                    if(task.getResult().getValue() != null){
+                        Map<String, Object> listinfo = (Map<String, Object>) task.getResult().getValue();
+                        Log.e("ListActivity", String.valueOf(listinfo) + " data for permission change");
+                        listinfo.put("permission", permission);
+                        list.child(user).child("lists").child(listname).setValue(listinfo)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("ListActivity", "List permission changed successfully");
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("ListActivity", "Error changing list permission", e);
+                                });
+                    }
+                    else{
+                        Log.e("ListActivity", "Error getting data for permission change2", task.getException());
+                    }
+                }
             }
         });
     }
