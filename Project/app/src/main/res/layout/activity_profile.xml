@@ -38,13 +38,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="49dp"
         android:text="Email"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.117" />
+        app:layout_constraintVertical_bias="0.117"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/usernamefield"
@@ -65,13 +66,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="49dp"
         android:text="Username"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.329" />
+        app:layout_constraintVertical_bias="0.329"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/namefield"
@@ -92,13 +94,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="47dp"
         android:text="Location"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.008"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.542"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/locationfield"
