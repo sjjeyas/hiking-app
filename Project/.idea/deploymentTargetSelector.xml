@@ -16,16 +16,13 @@
       <SelectionState runConfigName="selectGroupTest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchSelectGroupTest()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="TrailTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchSelectTrailTest()">
+      <SelectionState runConfigName="GroupSearchActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="seeReviewsBlackBoxTest()">
+      <SelectionState runConfigName="TrailSearchActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

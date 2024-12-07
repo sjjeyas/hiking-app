@@ -53,7 +53,7 @@ public class TrailAdapter extends ArrayAdapter<Trail> {
             trailName.setText(trail.getName());
             trailLocation.setText(trail.getLocation());
             trailDescription.setText(trail.getDescription());
-            trailRating.setText(trail.getDifficultyString());
+            trailRating.setText(trail.getRatingString());
         }
 
         convertView.setOnClickListener(view -> {

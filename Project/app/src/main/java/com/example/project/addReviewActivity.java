@@ -150,6 +150,7 @@ public class addReviewActivity extends AppCompatActivity {
                                                 });
                                     }
 
+
                                 }
                             }
                         });
@@ -163,7 +164,6 @@ public class addReviewActivity extends AppCompatActivity {
         });
 
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource
