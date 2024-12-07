@@ -19,12 +19,6 @@
       <SelectionState runConfigName="searchSelectGroupTest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TrailTests">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="searchSelectTrailTest()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="seeReviewsBlackBoxTest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
