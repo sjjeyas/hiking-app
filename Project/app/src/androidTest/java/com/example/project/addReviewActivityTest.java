@@ -49,6 +49,5 @@ public class addReviewActivityTest {
         onView(withId(R.id.editusername)).perform(typeText("joebiden@gmail.com"));
         onView(withId(R.id.editPassword)).perform(typeText("joebiden"));
         onView(withId(R.id.login_button)).perform(click());
-
     }
 }
