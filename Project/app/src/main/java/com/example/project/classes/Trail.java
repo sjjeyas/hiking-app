@@ -52,10 +52,13 @@ public class Trail {
         int count = 0;
 
         for (Map.Entry<String, Object> entry : reviews.entrySet()) {
-            Object reviewObj = entry.getValue();
-            if (reviewObj instanceof Review) {
-                Review review = (Review) reviewObj;
-                sumRating += review.getRating();
+            Map<String, Object> review = (Map<String, Object>) entry.getValue();
+            Object ratingObj = review.get("rating");
+            Log.e("update Trail", " Review: " + review);
+            if(ratingObj instanceof Number){
+                float currRating = ((Number) ratingObj).floatValue();
+                Log.e("update Trail", " Rating: " + currRating);
+                sumRating += currRating;
             }
         }
 
@@ -70,6 +73,7 @@ public class Trail {
         int count = Math.round(rating);
 
         StringBuilder result = new StringBuilder();
+        result.append(rating + " ");
         for (int i  = 0; i < 5; i++){
             if (i < count){
                 result.append("★");
