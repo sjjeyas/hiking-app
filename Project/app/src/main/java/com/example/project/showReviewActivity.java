@@ -98,7 +98,7 @@ public class showReviewActivity extends AppCompatActivity {
                             HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
                             String reviewer = (String) reviewBody.get("displayname");
                             Log.e("showReviewActivity", "Review name: " + reviewer);
-                            String rating = (String) reviewBody.get("rating");
+                            String rating = (String) reviewBody.get("rating").toString();
                             String review = (String) reviewBody.get("text");
                             r.append(reviewer).append(":\n").append(rating + "\n")
                                     .append(review).append("\n\n");
