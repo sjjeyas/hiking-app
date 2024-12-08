@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -246,6 +249,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateMapWithNewLocation(defaultLocation);
             }
         });
+
+        TextView trailName = findViewById(R.id.trailName);
+        LinearLayout trailDetailsContainer = findViewById(R.id.trailDetailsContainer);
+
+        trailName.setOnClickListener(v -> {
+            // Ensure the container is visible before proceeding
+            if (trailDetailsContainer.getVisibility() == View.VISIBLE) {
+                String selectedTrailName = trailName.getText().toString();
+
+                if (currentUser != null) {
+                    Intent intent = new Intent(MainActivity.this, TrailActivity.class);
+                    intent.putExtra("trailname", selectedTrailName);
+                    String userID ="";
+                    userID = FirebaseAuth.getInstance().getUid();
+                    intent.putExtra("user", userID);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Login to see more info.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
@@ -299,6 +323,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
             fetchTrailsAndDisplayMarkers(defaultLocation); //displays correct markers of nearby trails
         }
+
+
+        // Set a marker click listener
+        mMap.setOnMarkerClickListener(marker -> {
+            // Retrieve trail details from the marker's title or custom tag
+            String markerTitle = marker.getTitle();
+            Trail clickedTrail = (Trail) marker.getTag(); // Assuming you set the trail object as a tag
+
+            if (clickedTrail != null) {
+                // Update the UI with the trail details
+                LinearLayout trailDetailsContainer = findViewById(R.id.trailDetailsContainer);
+                TextView trailName = findViewById(R.id.trailName);
+                TextView trailLocation = findViewById(R.id.trailLocation);
+                TextView trailDifficulty = findViewById(R.id.trailDifficulty);
+
+                trailName.setText(clickedTrail.name);
+                trailLocation.setText("Location: " + clickedTrail.location);
+                trailDifficulty.setText("Rating: " + clickedTrail.rating);
+
+                // Make the container visible
+                trailDetailsContainer.setVisibility(View.VISIBLE);
+            }
+
+            return false; // Allow default behavior for marker clicks
+        });
+
     }
 
 //    void updateMapWithNewLocation(LatLng location) {
@@ -319,6 +369,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchTrailsAndDisplayMarkers(location);
     }
 
+//    void fetchTrailsAndDisplayMarkers(LatLng location) {
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                List<Trail> trails = new ArrayList<>();
+//
+//                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+//                    try {
+//                        Trail trail = trailSnapshot.getValue(Trail.class); // Deserialize each trail
+//                        if (trail != null) {
+//                            trails.add(trail);
+//                        }
+//                    } catch (Exception e) {
+//                        Log.e("MainActivity", "Error parsing trail: " + e.getMessage());
+//                    }
+//                }
+//
+//                // Calculate distances and sort trails
+//                List<Trail> trailsWithDistances = MainActivityLocation.getTrailsWithDistances(trails, location);
+//                List<Trail> closestTrails = MainActivityLocation.getClosestTrails(trailsWithDistances, 5);
+//
+//                // Display markers for the closest trails
+//                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+//                for (Trail trail : closestTrails) {
+//                    LatLng trailLocation = new LatLng(trail.latitude, trail.longitude);
+//                    mMap.addMarker(new MarkerOptions()
+//                            .position(trailLocation)
+//                            .title(trail.name + " (" + trail.location + ")"));
+//                    boundsBuilder.include(trailLocation);
+//                }
+//
+//                // Adjust the camera to fit all markers if there are any trails
+//                if (!closestTrails.isEmpty()) {
+//                    LatLngBounds bounds = boundsBuilder.build();
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+//                } else {
+//                    Log.d("MainActivity", "No trails found to display markers.");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("MainActivity", "Database error: " + databaseError.getMessage());
+//            }
+//        });
+//    }
+
     void fetchTrailsAndDisplayMarkers(LatLng location) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -336,21 +433,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
 
-                // Calculate distances and sort trails
                 List<Trail> trailsWithDistances = MainActivityLocation.getTrailsWithDistances(trails, location);
                 List<Trail> closestTrails = MainActivityLocation.getClosestTrails(trailsWithDistances, 5);
 
-                // Display markers for the closest trails
                 LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                 for (Trail trail : closestTrails) {
                     LatLng trailLocation = new LatLng(trail.latitude, trail.longitude);
-                    mMap.addMarker(new MarkerOptions()
+                    Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(trailLocation)
                             .title(trail.name + " (" + trail.location + ")"));
+
+                    if (marker != null) {
+                        marker.setTag(trail); // Associate the trail object with the marker
+                    }
+
                     boundsBuilder.include(trailLocation);
                 }
 
-                // Adjust the camera to fit all markers if there are any trails
                 if (!closestTrails.isEmpty()) {
                     LatLngBounds bounds = boundsBuilder.build();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
@@ -365,6 +464,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
 
     private void updateToolbarBasedOnLoginStatus(FirebaseUser currentUser) {
         if (currentUser != null) {

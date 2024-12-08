@@ -137,8 +137,45 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/trailDetailsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:elevation="4dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/trailName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trail Name"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/brown" />
+
+            <TextView
+                android:id="@+id/trailLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textSize="16sp"
+                android:textColor="@color/brown" />
+
+            <TextView
+                android:id="@+id/trailDifficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Difficulty: "
+                android:textSize="16sp"
+                android:textColor="@color/brown" />
+        </LinearLayout>
 
 
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
