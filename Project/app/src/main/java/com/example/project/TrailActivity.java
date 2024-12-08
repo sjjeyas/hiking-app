@@ -84,7 +84,6 @@ public class TrailActivity extends AppCompatActivity {
                     Log.e("addReviewActivity", "Error getting data", task.getException());
                 }else{
                     if(task.getResult().getValue() != null){
-                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
                         addreview.setText("Edit Review");
                     }
                 }

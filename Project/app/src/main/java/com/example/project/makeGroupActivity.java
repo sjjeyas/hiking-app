@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.project.classes.CheckFunctions;
 import com.example.project.classes.Group;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +37,7 @@ public class makeGroupActivity extends AppCompatActivity {
     private EditText groupNameInput;
     private EditText trailNameInput;
     private EditText capacityInput;
+    private CheckFunctions cf;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -53,6 +55,7 @@ public class makeGroupActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        cf = new CheckFunctions(user, user);
 
         if (u != null){
             user = u;
@@ -106,11 +109,12 @@ public class makeGroupActivity extends AppCompatActivity {
 
                         String name = groupNameInput.getText().toString();
                         String trail = trailNameInput.getText().toString();
-
+                        /*
                         if (name.isEmpty() || trail.isEmpty() || capacityInput.getText().toString().isEmpty()) {
                             Toast.makeText(makeGroupActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                         */
 
                         int capacity;
                         try {
@@ -123,6 +127,13 @@ public class makeGroupActivity extends AppCompatActivity {
                         data.put("name", name);
                         data.put("trail", trail);
                         data.put("capacity", capacity);
+
+                        if (!cf.validGroup(data)){
+                            Log.e("CheckFunction", String.valueOf(data));
+                            Toast.makeText(makeGroupActivity.this, "Please fill out the entire group info1", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         Log.d("makeGroupActivity", "HERE AT 1");
                         mDatabase.child("groups").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
@@ -178,6 +189,12 @@ public class makeGroupActivity extends AppCompatActivity {
                         data.put("name", name);
                         data.put("trail", trail);
                         data.put("capacity", capacity);
+
+                        if (!cf.validGroup(data)){
+                            Toast.makeText(makeGroupActivity.this, "Please fill out the entire group info2", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         Log.d("makeGroupActivity", "HERE AT 2");
                         Map<String, Object> groups = new HashMap<>();
                         groups.put(name, data);

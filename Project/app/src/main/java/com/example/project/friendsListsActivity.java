@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.project.classes.CheckFunctions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,12 +41,14 @@ public class friendsListsActivity extends AppCompatActivity {
     private Button newList;
     private LinearLayout listdisplay;
     private String view;
+    private CheckFunctions uf;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendslists);
         Log.e("friendsListsActivity", "friendsLists entered");
+
 
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -61,8 +64,7 @@ public class friendsListsActivity extends AppCompatActivity {
         }else {
             view = mAuth.getCurrentUser().getUid();
         }
-
-
+        uf = new CheckFunctions(view, user);
 
         dNameView = findViewById(R.id.user);
         //listsView = findViewById(R.id.mylists);
@@ -111,7 +113,7 @@ public class friendsListsActivity extends AppCompatActivity {
                         for (Map.Entry<String, Object> entry : lists.entrySet()){
                             HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
                             String name = (String) reviewBody.get("name");
-                            if (view.equals(mAuth.getUid())){
+                            if (uf.sameUser()){
                                 TLists.add(name);
                             }else {
                                 if ("public".equals((String) reviewBody.get("permission"))) {

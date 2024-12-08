@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.project.classes.CheckFunctions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ public class ListActivity extends AppCompatActivity {
     private String view;
     private ToggleButton perm;
     private String permission;
+    private CheckFunctions uf;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,6 +48,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         nameView = findViewById(R.id.listname);
         mAuth = FirebaseAuth.getInstance();
+
 
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -69,6 +72,9 @@ public class ListActivity extends AppCompatActivity {
         }else {
             view = user;
         }
+
+        uf = new CheckFunctions(user, view);
+
         String n = getIntent().getStringExtra("listname");
         if (n != null){
             listname = n;
@@ -76,7 +82,7 @@ public class ListActivity extends AppCompatActivity {
         nameView.setText(listname);
 
         perm = findViewById(R.id.permission_button);
-        if (view.equals(user)){
+        if (uf.sameUser()){
             perm.setVisibility(View.VISIBLE);
         }else{
             perm.setVisibility(View.INVISIBLE);
@@ -191,7 +197,7 @@ public class ListActivity extends AppCompatActivity {
         });
     }
     private void goToLists(){
-        if (view.equals(user)){
+        if (uf.sameUser()){
             Intent intent = new Intent(this, myListsActivity.class);
             intent.putExtra("user", user);
             this.startActivity(intent);

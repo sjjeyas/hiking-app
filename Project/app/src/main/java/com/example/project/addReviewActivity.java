@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.project.classes.CheckFunctions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -37,6 +38,7 @@ public class addReviewActivity extends AppCompatActivity {
     private TextView ratingTextView;
     private FirebaseAuth mAuth;
     private String title;
+    private CheckFunctions cf;
 
 
     private void backToTrail(){
@@ -58,6 +60,8 @@ public class addReviewActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        cf = new CheckFunctions(user, user);
+
         Log.d("addReviewActivity", "This is a debug message!");
         reviewTextView = findViewById(R.id.editreview);
         addReviewView = findViewById(R.id.addreview);
@@ -72,7 +76,7 @@ public class addReviewActivity extends AppCompatActivity {
         if (u != null){
             user = u;
         }else {
-            user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42";
+            user = mAuth.getUid();
         }
         title = "Add Review: "+trail;
         addReviewView.setText(title);
@@ -139,6 +143,10 @@ public class addReviewActivity extends AppCompatActivity {
                         data.put("text", review);
                         data.put("rating", rating);
                         data.put("displayname", displayname);
+                        if (!cf.validReview(data)){
+                            Toast.makeText(addReviewActivity.this, "Please fill out the entire review", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         Log.d("addReviewActivity", review);
                         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
                         mDatabase.child(trail).child("reviews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
