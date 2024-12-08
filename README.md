@@ -9,7 +9,7 @@ Android API VanillaIceCream arm64-v8a <br /><br />
 Black Box Testing <br />
 More black box tests were added for testing GroupActivity, searchGroupActivity and makeGroupActivity. <br /> <br />
 White Box Testing <br />
-More white box tests were added for testing the ListActivity and addReviewActivity.
+More white box tests were added for testing the makeGroupActivity and addReviewActivity.
 <br /><br />
 Homepage Map <br />
 Added functionality of clicking on nearby trails for trail information added, as well as small bug fixes.
