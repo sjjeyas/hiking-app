@@ -29,6 +29,15 @@ public class Trail {
         this.reviews = r;
     }
 
+
+    public Trail(String name, String location, Double latitude, Double longitude) {
+        this.name = name;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+//        this.distanceFromUser = Double.parseDouble(null);
+    }
+
     public Trail() {
 
     }

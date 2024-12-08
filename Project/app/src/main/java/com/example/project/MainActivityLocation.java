@@ -55,7 +55,7 @@ public class MainActivityLocation {
 
     // Calculate distance between two LatLng points
     public static double calculateDistance(LatLng start, LatLng end) {
-        Log.d(TAG, "Calculating distance between points: " + start + " and " + end);
+//        Log.d(TAG, "Calculating distance between points: " + start + " and " + end);
         double earthRadius = 6371; // Radius of the Earth in kilometers
         double dLat = Math.toRadians(end.latitude - start.latitude);
         double dLng = Math.toRadians(end.longitude - start.longitude);
@@ -77,7 +77,7 @@ public class MainActivityLocation {
                 trail.distanceFromUser = distance; // Store the calculated distance in the trail object
                 trailsWithDistances.add(trail);
             } else {
-                Log.e(TAG, "Trail " + trail.name + " is missing latitude or longitude.");
+//                Log.e(TAG, "Trail " + trail.name + " is missing latitude or longitude.");
             }
         }
         return trailsWithDistances;
