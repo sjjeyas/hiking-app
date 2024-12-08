@@ -12,7 +12,7 @@ White Box Testing <br />
 More white box tests were added for testing the makeGroupActivity and addReviewActivity.
 <br /><br />
 Homepage Map <br />
-Added functionality of clicking on nearby trails for trail information added, as well as small bug fixes.
+Added functionality of clicking on nearby trails for trail information added, as well as improving the loading time of the map.
 <br /><br />
 Lists <br />
 Added list viewing permissions, users can now set their lists as private or public upon creation and change the permission if they change their mind.
