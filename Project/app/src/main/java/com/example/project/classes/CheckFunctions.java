@@ -44,6 +44,10 @@ public class CheckFunctions {
     public boolean validGroup(Map<String, Object> group){
         Object g =  group.get("name");
         Object t = group.get("trail");
+        Object c = group.get("capacity");
+        if (c == null){
+            return false;
+        }
         if (g != null && (group.get("name") instanceof String)){
             if(g.equals("")){
                 return false;

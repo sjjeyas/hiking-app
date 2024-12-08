@@ -139,56 +139,90 @@ public class CheckFunctionTest {
     public void validGroup_emptyName() {
         String name = "";
         String trail = "Pirates Cove Trail";
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("trail", trail);
-        assertFalse(cf.validReview(data));
+        data.put("capacity", capacity);
+        assertFalse(cf.validGroup(data));
     }
     @Test
     public void validGroup_emptyTrail() {
         String name = "name";
         String trail = "";
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
+        data.put("capacity", capacity);
         data.put("trail", trail);
-        assertFalse(cf.validReview(data));
+        assertFalse(cf.validGroup(data));
     }
     @Test
     public void validGroup_nullTrail() {
         String name = "name";
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
-        assertFalse(cf.validReview(data));
+        data.put("capacity", capacity);
+        assertFalse(cf.validGroup(data));
     }
     @Test
     public void validGroup_nullName() {
         String trail = "Pirates Cove Trail";
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("trail", trail);
-        assertFalse(cf.validReview(data));
+        data.put("capacity", capacity);
+        assertFalse(cf.validGroup(data));
     }
     @Test
     public void validGroup_badTypeName() {
         Integer name = 111;
         String trail = "Pirates Cove Trail";
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("trail", trail);
-        assertFalse(cf.validReview(data));
+        data.put("capacity", capacity);
+        assertFalse(cf.validGroup(data));
     }
     @Test
     public void validGroup_badTypeTrail() {
         String name = "name";
         Boolean trail = true;
+        Integer capacity = 5;
         CheckFunctions cf = new CheckFunctions(v, u);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("trail", trail);
-        assertFalse(cf.validReview(data));
+        data.put("capacity", capacity);
+        assertFalse(cf.validGroup(data));
+    }
+    @Test
+    public void validGroup() {
+        String name = "name";
+        String trail = "Aimee's Loop";
+        Integer capacity = 5;
+        CheckFunctions cf = new CheckFunctions(v, u);
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("trail", trail);
+        data.put("capacity", capacity);
+        assertTrue(cf.validGroup(data));
+    }
+    @Test
+    public void validGroup_noCapacity() {
+        String name = "name";
+        String trail = "Aimee's Loop";
+        CheckFunctions cf = new CheckFunctions(v, u);
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("trail", trail);
+        assertFalse(cf.validGroup(data));
     }
 }
