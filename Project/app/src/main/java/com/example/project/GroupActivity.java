@@ -97,9 +97,17 @@ public class GroupActivity extends AppCompatActivity {
                                         Log.d("GroupActivity", "Loaded group: " + g.name);
                                         TextView name = findViewById(R.id.groupname);
                                         TextView location = findViewById(R.id.trailname);
+                                        TextView date = findViewById(R.id.date);
+                                        TextView time = findViewById(R.id.time);
+                                        TextView capacity = findViewById(R.id.capacity);
+
                                         TextView users = findViewById(R.id.userlist);
                                         name.setText(g.name);
                                         location.setText(g.trail);
+                                        date.setText(g.date);
+                                        time.setText(g.time);
+                                        capacity.setText(g.getCapacityString());
+
                                         String r = "";
                                         Set<String> keys = g.members.keySet();
                                         for (String k : g.members.keySet()){
@@ -120,7 +128,6 @@ public class GroupActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void joinGroup(Group g){

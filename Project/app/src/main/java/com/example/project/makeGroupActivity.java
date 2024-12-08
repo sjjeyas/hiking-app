@@ -1,19 +1,25 @@
 package com.example.project;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.project.classes.CheckFunctions;
 import com.example.project.classes.Group;
@@ -24,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +44,8 @@ public class makeGroupActivity extends AppCompatActivity {
     private EditText groupNameInput;
     private EditText trailNameInput;
     private EditText capacityInput;
+    private EditText dateInput;
+    private EditText timeInput;
     private CheckFunctions cf;
 
     @SuppressLint("MissingInflatedId")
@@ -49,6 +58,9 @@ public class makeGroupActivity extends AppCompatActivity {
         groupNameInput = findViewById(R.id.groupNameInput);
         trailNameInput = findViewById(R.id.trailNameInput);
         capacityInput = findViewById(R.id.capacityInput);
+        dateInput = findViewById(R.id.dateInput);
+        timeInput = findViewById(R.id.timeInput);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -62,6 +74,24 @@ public class makeGroupActivity extends AppCompatActivity {
         }else {
             user = mAuth.getCurrentUser().getUid();
         }
+
+        dateInput.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            new DatePickerDialog(makeGroupActivity.this, (view, year, month, dayOfMonth) -> {
+                String selectedDate = (month + 1) + "/" + dayOfMonth + "/" + year;
+                dateInput.setText(selectedDate);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+        timeInput.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            new TimePickerDialog(makeGroupActivity.this, (view, hourOfDay, minute) -> {
+                int hour = hourOfDay % 12;
+                if (hour == 0) hour = 12;
+                String period = (hourOfDay < 12) ? "AM" : "PM";
+
+                String selectedTime = String.format("%02d:%02d %s", hour, minute, period);
+                timeInput.setText(selectedTime);
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();        });
 
         back = (Button) findViewById(R.id.back_button);
         back.setOnClickListener(new View.OnClickListener() {
@@ -123,10 +153,14 @@ public class makeGroupActivity extends AppCompatActivity {
                             Toast.makeText(makeGroupActivity.this, "Please enter a number for capacity.", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        String date = dateInput.getText().toString();
+                        String time = timeInput.getText().toString();
 
                         data.put("name", name);
                         data.put("trail", trail);
                         data.put("capacity", capacity);
+                        data.put("date", date);
+                        data.put("time", time);
 
                         if (!cf.validGroup(data)){
                             Log.e("CheckFunction", String.valueOf(data));

@@ -109,8 +109,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="347dp"
-        android:layout_height="64dp"
+        android:layout_width="366dp"
+        android:layout_height="75dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -142,18 +142,21 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="345dp"
-        android:layout_height="67dp"
+        android:layout_width="136dp"
+        android:layout_height="70dp"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/makeGroupText"
+        app:layout_constraintVertical_bias="0.448"
         tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/capacity"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".3"
             android:gravity="center_vertical"
@@ -163,13 +166,99 @@
 
         <EditText
             android:id="@+id/capacityInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="8dp"
+            android:layout_height="50dp"
             android:layout_weight=".9"
             android:backgroundTint="@color/brown"
             android:ems="15"
+            android:gravity="center_vertical"
             android:inputType="text"
             android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="203dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="171dp"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.468"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="center_vertical"
+                android:text="Date"
+                android:textColor="@color/brown"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/dateInput"
+                android:layout_width="128dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:inputType="date"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="170dp"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.468"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="center_vertical"
+                android:text="Time"
+                android:textColor="@color/brown"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/timeInput"
+                android:layout_width="128dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:inputType="time"
+                android:textSize="15sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
