@@ -1,5 +1,6 @@
 package com.example.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng defaultLocation;
     private LatLng userlocation;
     private DatabaseReference databaseReference;
+    private DatabaseReference zipLatLngRef;
     GoogleMap mMap;
 
     private EditText zipInput;
@@ -75,14 +77,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Get the current user and set database for trails
         FirebaseUser currentUser = mAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("trails");
-
+        zipLatLngRef = FirebaseDatabase.getInstance().getReference("zipLatLng");
 
         // Show the appropriate toolbar based on login status
         updateToolbarBasedOnLoginStatus(currentUser);
 
-        defaultLocation = MainActivityLocation.getLocationFromZipcode(this, "90007");
+        defaultLocation = new LatLng(34.03130461195253, -118.28911693516095);
+
+//        defaultLocation = MainActivityLocation.getLocationFromZipcode(this, "90007");
+        // Set default location
+//        fetchLocationFromZipcode("90007", location -> {
+//            defaultLocation = location;
+//        });
 
         //set user location based off if user is logged in or not
+//        if (currentUser != null) {
+//            String userId = currentUser.getUid();
+//            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+//
+//            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot snapshot) {
+//                    if (snapshot.exists()) {
+//                        String zipcode = snapshot.child("zipcode").getValue(String.class); // Retrieve zipcode
+//                        Log.d("MainActivity", "User zipcode pulled from database: " + zipcode);
+//
+//                        if (zipcode != null) {
+//                            userlocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this, zipcode);
+//                            Log.d("MainActivity", "User location set from zipcode: " + userlocation);
+//
+//                            // Update the map after user location is set
+//                            if (mMap != null) {
+//                                updateMapWithNewLocation(userlocation);
+//                            }
+//                        } else {
+//                            Log.e("MainActivity", "Zipcode is null for user.");
+//                        }
+//                    } else {
+//                        Log.e("MainActivity", "No user data found.");
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    Log.e("MainActivity", "Database error: " + error.getMessage());
+//                }
+//            });
+//        } else {
+//            Log.d("MainActivity", "No user is logged in. Using default location.");
+//            userlocation = null;
+//        }
+
         if (currentUser != null) {
             String userId = currentUser.getUid();
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
@@ -91,17 +136,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        String zipcode = snapshot.child("zipcode").getValue(String.class); // Retrieve zipcode
+                        String zipcode = snapshot.child("zipcode").getValue(String.class);
                         Log.d("MainActivity", "User zipcode pulled from database: " + zipcode);
 
                         if (zipcode != null) {
-                            userlocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this, zipcode);
-                            Log.d("MainActivity", "User location set from zipcode: " + userlocation);
+                            fetchLocationFromZipcode(zipcode, location -> {
+                                if (location != null) {
+                                    userlocation = location;
+                                    Log.d("MainActivity", "User location set from zipcode: " + userlocation);
 
-                            // Update the map after user location is set
-                            if (mMap != null) {
-                                updateMapWithNewLocation(userlocation);
-                            }
+                                    if (mMap != null) {
+                                        updateMapWithNewLocation(userlocation);
+                                    }
+                                } else {
+                                    Log.e("MainActivity", "Location fetch returned null.");
+                                }
+                            });
                         } else {
                             Log.e("MainActivity", "Zipcode is null for user.");
                         }
@@ -120,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             userlocation = null;
         }
 
+
         // Get a handle to the fragment and register the callback.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragmentContainer);
@@ -131,12 +182,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchButton.setOnClickListener(v -> {
             String newZipcode = zipInput.getText().toString();
             if (!newZipcode.isEmpty()) {
-                LatLng newLocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this,newZipcode);
-                if (newLocation != null) {
-                    updateMapWithNewLocation(newLocation);
-                } else {
-                    Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
-                }
+//                LatLng newLocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this,newZipcode);
+//                if (newLocation != null) {
+//                    updateMapWithNewLocation(newLocation);
+//                } else {
+//                    Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                Toast.makeText(this, "Please enter a zip code.", Toast.LENGTH_SHORT).show();
+//            }
+                fetchLocationFromZipcode(newZipcode, newLocation -> {
+                    if (newLocation != null) {
+                        updateMapWithNewLocation(newLocation);
+                    } else {
+                        Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(this, "Please enter a zip code.", Toast.LENGTH_SHORT).show();
             }
@@ -152,6 +213,46 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+
+    // Fetch latitude and longitude from "zipLatLng" database
+    private void fetchLocationFromZipcode(String zipcode, OnLocationFetchedListener listener) {
+        zipLatLngRef.child(zipcode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double latitude = snapshot.child("latitude").getValue(Double.class);
+                    Double longitude = snapshot.child("longitude").getValue(Double.class);
+
+                    if (latitude != null && longitude != null) {
+                        listener.onLocationFetched(new LatLng(latitude, longitude));
+                        Log.e("MainActivity", "Latitude is: " + latitude + "Longitude is: " +longitude);
+
+                    } else {
+                        Log.e("MainActivity", "Latitude or Longitude is null for ZIP code: " + zipcode);
+                        Toast.makeText(MainActivity.this, "Invalid location data for ZIP code: " + zipcode, Toast.LENGTH_SHORT).show();
+                        listener.onLocationFetched(null);
+                    }
+                } else {
+                    Log.e("MainActivity", "ZIP code not found in database: " + zipcode);
+                    Toast.makeText(MainActivity.this, "ZIP code not found: " + zipcode, Toast.LENGTH_SHORT).show();
+                    listener.onLocationFetched(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("MainActivity", "Database error: " + error.getMessage());
+                Toast.makeText(MainActivity.this, "Error accessing location data.", Toast.LENGTH_SHORT).show();
+                listener.onLocationFetched(null);
+            }
+        });
+    }
+
+
+    interface OnLocationFetchedListener {
+        void onLocationFetched(LatLng location);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -165,69 +266,128 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+//    void updateMapWithNewLocation(LatLng location) {
+//        mMap.clear(); // Clear existing markers
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
+//        fetchTrailsAndDisplayMarkers(location);
+//    }
+
     void updateMapWithNewLocation(LatLng location) {
+        if (location == null) {
+            Log.e("MainActivity", "Cannot update map with a null location.");
+            Toast.makeText(this, "Unable to update map: Invalid location.", Toast.LENGTH_SHORT).show();
+            return; // Exit early to prevent further execution
+        }
+
         mMap.clear(); // Clear existing markers
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
         fetchTrailsAndDisplayMarkers(location);
     }
-
 
     void fetchTrailsAndDisplayMarkers(LatLng location) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Trail> trails = new ArrayList<>();
-                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 
                 for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
                     try {
                         Trail trail = trailSnapshot.getValue(Trail.class); // Deserialize each trail
                         if (trail != null) {
-                            LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
-                            if (trailLocation != null) {
-                                trail.zipcode = (int) MainActivityLocation.calculateDistance(location, trailLocation);
-                                trails.add(trail);
-
-                                // Add this location to the bounds
-                                boundsBuilder.include(trailLocation);
-                            }
+                            trails.add(trail);
                         }
                     } catch (Exception e) {
-                        Log.e("TAG", "Error parsing trail: " + e.getMessage());
+                        Log.e("MainActivity", "Error parsing trail: " + e.getMessage());
                     }
                 }
 
-                // Sort trails by distance and pick the closest 5
-                Collections.sort(trails, Comparator.comparingInt(trail -> trail.zipcode));
-                List<Trail> closestTrails = trails.subList(0, Math.min(trails.size(), 5));
+                // Calculate distances and sort trails
+                List<Trail> trailsWithDistances = MainActivityLocation.getTrailsWithDistances(trails, location);
+                List<Trail> closestTrails = MainActivityLocation.getClosestTrails(trailsWithDistances, 5);
 
                 // Display markers for the closest trails
+                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                 for (Trail trail : closestTrails) {
-                    LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
-                    if (trailLocation != null) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(trailLocation)
-                                .title(trail.name + " (" + trail.location + ")"));
-                    }
+                    LatLng trailLocation = new LatLng(trail.latitude, trail.longitude);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(trailLocation)
+                            .title(trail.name + " (" + trail.location + ")"));
+                    boundsBuilder.include(trailLocation);
                 }
 
                 // Adjust the camera to fit all markers if there are any trails
-                if (!trails.isEmpty()) {
+                if (!closestTrails.isEmpty()) {
                     LatLngBounds bounds = boundsBuilder.build();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); // 100 is padding
-//                    mMap.animateCamera(CameraUpdateFactory.zoomBy(0.05f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
                 } else {
-                    Log.d("TAG", "No trails found to display markers.");
+                    Log.d("MainActivity", "No trails found to display markers.");
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("TAG", "Database error: " + databaseError.getMessage());
+                Log.e("MainActivity", "Database error: " + databaseError.getMessage());
             }
         });
     }
+
+
+//    void fetchTrailsAndDisplayMarkers(LatLng location) {
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                List<Trail> trails = new ArrayList<>();
+//                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+//
+//                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
+//                    try {
+//                        Trail trail = trailSnapshot.getValue(Trail.class); // Deserialize each trail
+//                        if (trail != null) {
+//                            LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
+//                            if (trailLocation != null) {
+//                                trail.zipcode = (int) MainActivityLocation.calculateDistance(location, trailLocation);
+//                                trails.add(trail);
+//
+//                                // Add this location to the bounds
+//                                boundsBuilder.include(trailLocation);
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        Log.e("TAG", "Error parsing trail: " + e.getMessage());
+//                    }
+//                }
+//
+//                // Sort trails by distance and pick the closest 5
+//                Collections.sort(trails, Comparator.comparingInt(trail -> trail.zipcode));
+//                List<Trail> closestTrails = trails.subList(0, Math.min(trails.size(), 5));
+//
+//                // Display markers for the closest trails
+//                for (Trail trail : closestTrails) {
+//                    LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
+//                    if (trailLocation != null) {
+//                        mMap.addMarker(new MarkerOptions()
+//                                .position(trailLocation)
+//                                .title(trail.name + " (" + trail.location + ")"));
+//                    }
+//                }
+//
+//                // Adjust the camera to fit all markers if there are any trails
+//                if (!trails.isEmpty()) {
+//                    LatLngBounds bounds = boundsBuilder.build();
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
+////                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); // 100 is padding
+////                    mMap.animateCamera(CameraUpdateFactory.zoomBy(0.05f));
+//                } else {
+//                    Log.d("TAG", "No trails found to display markers.");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("TAG", "Database error: " + databaseError.getMessage());
+//            }
+//        });
+//    }
 
 //    LatLng getLocationFromZipcode(String zipcode) {
 //        Log.d("MainActivity", "Attempting to fetch location for ZIP code: " + zipcode);

@@ -14,6 +14,9 @@ public class Trail {
     public int zipcode;
     public String location;
     public String description;
+    public Double latitude;
+    public Double longitude;
+    public double distanceFromUser;
     public Map<String, Object> reviews;
 
     public Trail(String n, String l, String d, Map<String, Object> r){
