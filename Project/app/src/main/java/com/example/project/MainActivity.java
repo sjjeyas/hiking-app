@@ -179,29 +179,64 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         // Set up button listeners
-        searchButton.setOnClickListener(v -> {
-            String newZipcode = zipInput.getText().toString();
-            if (!newZipcode.isEmpty()) {
-//                LatLng newLocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this,newZipcode);
-//                if (newLocation != null) {
-//                    updateMapWithNewLocation(newLocation);
-//                } else {
-//                    Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
-//                }
+//        searchButton.setOnClickListener(v -> {
+//            String newZipcode = zipInput.getText().toString();
+//            if (!newZipcode.isEmpty()) {
+//                fetchLocationFromZipcode(newZipcode, newLocation -> {
+//                    if (newLocation != null) {
+//                        updateMapWithNewLocation(newLocation);
+//                    } else {
+//                        Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 //            } else {
 //                Toast.makeText(this, "Please enter a zip code.", Toast.LENGTH_SHORT).show();
 //            }
-                fetchLocationFromZipcode(newZipcode, newLocation -> {
-                    if (newLocation != null) {
-                        updateMapWithNewLocation(newLocation);
-                    } else {
-                        Toast.makeText(this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
+//        });
+        searchButton.setOnClickListener(v -> {
+            String newZipcode = zipInput.getText().toString();
+            if (!newZipcode.isEmpty()) {
+                zipLatLngRef.child(newZipcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // Zipcode exists in the database; fetch its location
+                            Double latitude = snapshot.child("latitude").getValue(Double.class);
+                            Double longitude = snapshot.child("longitude").getValue(Double.class);
+                            if (latitude != null && longitude != null) {
+                                LatLng location = new LatLng(latitude, longitude);
+                                updateMapWithNewLocation(location);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Invalid location data for ZIP code: " + newZipcode, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Zipcode does not exist in the database; use Geocoder to fetch the location
+                            LatLng newLocation = MainActivityLocation.getLocationFromZipcode(MainActivity.this, newZipcode);
+                            if (newLocation != null) {
+                                // Add the new zipcode and its coordinates to the database
+                                zipLatLngRef.child(newZipcode).child("latitude").setValue(newLocation.latitude);
+                                zipLatLngRef.child(newZipcode).child("longitude").setValue(newLocation.longitude);
+                                Log.d("MainActivity", "Added new ZIP code to database: " + newZipcode);
+
+                                // Update the map with the new location
+                                updateMapWithNewLocation(newLocation);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Unable to fetch location for ZIP code: " + newZipcode, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e("MainActivity", "Database error: " + error.getMessage());
+                        Toast.makeText(MainActivity.this, "Error accessing location data.", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(this, "Please enter a zip code.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter a ZIP code.", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         currentLocationButton.setOnClickListener(v -> {
             if (userlocation != null) {
@@ -330,107 +365,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
-
-//    void fetchTrailsAndDisplayMarkers(LatLng location) {
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                List<Trail> trails = new ArrayList<>();
-//                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-//
-//                for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
-//                    try {
-//                        Trail trail = trailSnapshot.getValue(Trail.class); // Deserialize each trail
-//                        if (trail != null) {
-//                            LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
-//                            if (trailLocation != null) {
-//                                trail.zipcode = (int) MainActivityLocation.calculateDistance(location, trailLocation);
-//                                trails.add(trail);
-//
-//                                // Add this location to the bounds
-//                                boundsBuilder.include(trailLocation);
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        Log.e("TAG", "Error parsing trail: " + e.getMessage());
-//                    }
-//                }
-//
-//                // Sort trails by distance and pick the closest 5
-//                Collections.sort(trails, Comparator.comparingInt(trail -> trail.zipcode));
-//                List<Trail> closestTrails = trails.subList(0, Math.min(trails.size(), 5));
-//
-//                // Display markers for the closest trails
-//                for (Trail trail : closestTrails) {
-//                    LatLng trailLocation = MainActivityLocation.getLocationFromCity(MainActivity.this, trail.location);
-//                    if (trailLocation != null) {
-//                        mMap.addMarker(new MarkerOptions()
-//                                .position(trailLocation)
-//                                .title(trail.name + " (" + trail.location + ")"));
-//                    }
-//                }
-//
-//                // Adjust the camera to fit all markers if there are any trails
-//                if (!trails.isEmpty()) {
-//                    LatLngBounds bounds = boundsBuilder.build();
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
-////                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); // 100 is padding
-////                    mMap.animateCamera(CameraUpdateFactory.zoomBy(0.05f));
-//                } else {
-//                    Log.d("TAG", "No trails found to display markers.");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.e("TAG", "Database error: " + databaseError.getMessage());
-//            }
-//        });
-//    }
-
-//    LatLng getLocationFromZipcode(String zipcode) {
-//        Log.d("MainActivity", "Attempting to fetch location for ZIP code: " + zipcode);
-//        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-//        try {
-//            List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
-//            if (addresses != null && !addresses.isEmpty()) {
-//                Address address = addresses.get(0);
-//                Log.d("MainActivity", "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
-//                return new LatLng(address.getLatitude(), address.getLongitude());
-//            } else {
-//                Log.e("MainActivity", "No results from Geocoder for ZIP code: " + zipcode);
-//            }
-//        } catch (IOException e) {
-//            Log.e("MainActivity", "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    private LatLng getLocationFromCity(String city) {
-//        Geocoder geocoder = new Geocoder(this, Locale.US);
-//        try {
-//            List<Address> addresses = geocoder.getFromLocationName(city, 1);
-//            if (addresses != null && !addresses.isEmpty()) {
-//                Address address = addresses.get(0);
-//                return new LatLng(address.getLatitude(), address.getLongitude());
-//            }
-//        } catch (IOException e) {
-//            Log.e("TAG", "Geocoder failed for city: " + city + " - " + e.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    private double calculateDistance(LatLng start, LatLng end) {
-//        double earthRadius = 6371; // Radius of the Earth in kilometers
-//        double dLat = Math.toRadians(end.latitude - start.latitude);
-//        double dLng = Math.toRadians(end.longitude - start.longitude);
-//        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//                Math.cos(Math.toRadians(start.latitude)) * Math.cos(Math.toRadians(end.latitude)) *
-//                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-//        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        return earthRadius * c; // Distance in kilometers
-//    }
 
     private void updateToolbarBasedOnLoginStatus(FirebaseUser currentUser) {
         if (currentUser != null) {

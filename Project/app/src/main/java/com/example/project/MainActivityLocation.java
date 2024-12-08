@@ -18,25 +18,25 @@ import java.util.Locale;
 public class MainActivityLocation {
     private static final String TAG = "MainActivityLocation";
 
-//    // Fetch LatLng from ZIP code
-//    public static LatLng getLocationFromZipcode(Context context, String zipcode) {
-//        Log.d(TAG, "Attempting to fetch location for ZIP code: " + zipcode);
-//        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-//        try {
-//            List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
-//            if (addresses != null && !addresses.isEmpty()) {
-//                Address address = addresses.get(0);
-////                Log.d(TAG, "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
-//                return new LatLng(address.getLatitude(), address.getLongitude());
-//            } else {
-//                Log.e(TAG, "No results from Geocoder for ZIP code: " + zipcode);
-//            }
-//        } catch (IOException e) {
-//            Log.e(TAG, "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
-//        }
-//        return null;
-//    }
-//
+    // Fetch LatLng from ZIP code
+    public static LatLng getLocationFromZipcode(Context context, String zipcode) {
+        Log.d(TAG, "Attempting to fetch location for ZIP code: " + zipcode);
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(zipcode, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+//                Log.d(TAG, "Geocoder returned location: " + address.getLatitude() + ", " + address.getLongitude());
+                return new LatLng(address.getLatitude(), address.getLongitude());
+            } else {
+                Log.e(TAG, "No results from Geocoder for ZIP code: " + zipcode);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Geocoder failed for ZIP code: " + zipcode + " with error: " + e.getMessage());
+        }
+        return null;
+    }
+
 //    // Fetch LatLng from city name
 //    public static LatLng getLocationFromCity(Context context, String city) {
 //        Log.d(TAG, "Attempting to fetch location for city: " + city);
