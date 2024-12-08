@@ -73,7 +73,7 @@ public class showReviewActivity extends AppCompatActivity {
 
         Log.d("showReviewActivity", "This is a debug message!");
         titleReview = findViewById(R.id.titlereview);
-        String title = "Reviews: " + trail;
+        String title = "Reviews for " + trail;
         titleReview.setText(title);
         mDatabase = FirebaseDatabase.getInstance().getReference("trails");
         mDatabase.child(trail).child("reviews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -98,12 +98,16 @@ public class showReviewActivity extends AppCompatActivity {
                             HashMap<String, Object> reviewBody = (HashMap<String, Object>) entry.getValue(); // Review text
                             String reviewer = (String) reviewBody.get("displayname");
                             Log.e("showReviewActivity", "Review name: " + reviewer);
-                            String rating = (String) reviewBody.get("rating");
+                            String rating = (String) reviewBody.get("rating").toString();
                             String review = (String) reviewBody.get("text");
-                            r.append(reviewer).append(":\n").append(rating + "\n")
+                            r.append(reviewer).append(":\n").append( rating + " stars" + "\n")
                                     .append(review).append("\n\n");
                         }
                         reviews = findViewById(R.id.reviews);
+                        for (Map.Entry<String, Object> entry : results.entrySet()){
+                            // Reviewer name
+                            r.append("\n\n\n");
+                        }
                         reviews.setText(r);
                         Log.d("showReviewActivity", "now it crashes");
                     } else {

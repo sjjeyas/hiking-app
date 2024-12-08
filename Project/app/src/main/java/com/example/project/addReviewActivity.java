@@ -36,6 +36,7 @@ public class addReviewActivity extends AppCompatActivity {
     private TextView reviewTextView;
     private TextView ratingTextView;
     private FirebaseAuth mAuth;
+    private String title;
 
 
     private void backToTrail(){
@@ -73,7 +74,7 @@ public class addReviewActivity extends AppCompatActivity {
         }else {
             user = "cpE14NyyLWMRRmEQvkXIZeeZ3O42";
         }
-        String title = "Add Review: "+trail;
+        title = "Add Review: "+trail;
         addReviewView.setText(title);
         submit = findViewById(R.id.sendreview_button);
         back = (Button)findViewById(R.id.back_button);
@@ -85,20 +86,34 @@ public class addReviewActivity extends AppCompatActivity {
            }
         });
         mDatabase= FirebaseDatabase.getInstance().getReference("trails");
+        mDatabase.child(trail).child("reviews").child(user).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task){
+                if (!task.isSuccessful()){
+                    Log.e("addReviewActivity", "Error getting data", task.getException());
+                }else{
+                    if(task.getResult().getValue() != null){
+                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                        ratingTextView.setText(String.valueOf(results.get("rating")));
+                        reviewTextView.setText(String.valueOf(results.get("text")));
+                        title = "Edit Review: "+trail;
+                        addReviewView.setText(title);
+                    }
+                }
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 writeReview();
-                backToTrail();
             }
         });
 
     }
 
-
     private void writeReview(){
         DatabaseReference names  = FirebaseDatabase.getInstance().getReference("users");
-        Map<String, String> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         names.child(user).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -109,7 +124,18 @@ public class addReviewActivity extends AppCompatActivity {
                         displayname = (String) task.getResult().getValue();
                         Log.e("addReviewActivity", "Writing for name " + displayname);
                         String review = reviewTextView.getText().toString();
-                        String rating = ratingTextView.getText().toString();
+                        int rating;
+                        try {
+                            rating = Integer.parseInt(ratingTextView.getText().toString());
+                            if (rating < 1 || rating > 5) {
+                                Toast.makeText(addReviewActivity.this, "Rating must be between 1 and 5.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(addReviewActivity.this, "Please enter a number for rating (1-5).", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         data.put("text", review);
                         data.put("rating", rating);
                         data.put("displayname", displayname);
@@ -121,17 +147,13 @@ public class addReviewActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     Log.e("addReviewActivity", "Error getting data", task.getException());
                                 } else {
-                                    //Log.d("FriendsActivity", String.valueOf(task.getResult().getValue()));
-                                    // THIS IS THE CODE THAT ADDS A NEW USER BEFORE READING PREVIOUS USERS,
-                                    // YOU HAVE TO RETRIEVE OLD FRIENDS TO ADD A NEW FRIEND
-                                    //AND UPDATE THE WHOLE FRIENDS LIST IN THE DB
                                     if (task.getResult().getValue() != null){
                                         Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
                                         results.put(user, data);
                                         mDatabase.child(trail).child("reviews").setValue(results)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Log.d("addReviewActivity", "Review added successfully");
-
+                                                    backToTrail();
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("addReviewActivity", "Error adding review", e);
@@ -143,12 +165,13 @@ public class addReviewActivity extends AppCompatActivity {
                                         mDatabase.child(trail).child("reviews").setValue(results)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Log.d("addReviewActivity", "Review added successfully");
-
+                                                    backToTrail();
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("addReviewActivity", "Error adding review", e);
                                                 });
                                     }
+
 
                                 }
                             }
@@ -161,9 +184,7 @@ public class addReviewActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navbar, menu); // Inflate your menu resource

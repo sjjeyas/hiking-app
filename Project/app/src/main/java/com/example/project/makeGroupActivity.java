@@ -106,7 +106,19 @@ public class makeGroupActivity extends AppCompatActivity {
 
                         String name = groupNameInput.getText().toString();
                         String trail = trailNameInput.getText().toString();
-                        int capacity = Integer.parseInt(capacityInput.getText().toString());
+
+                        if (name.isEmpty() || trail.isEmpty() || capacityInput.getText().toString().isEmpty()) {
+                            Toast.makeText(makeGroupActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        int capacity;
+                        try {
+                            capacity = Integer.parseInt(capacityInput.getText().toString());
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(makeGroupActivity.this, "Please enter a number for capacity.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         data.put("name", name);
                         data.put("trail", trail);
@@ -126,6 +138,7 @@ public class makeGroupActivity extends AppCompatActivity {
                                                                     "Group creation successful!",
                                                                     Toast.LENGTH_LONG)
                                                             .show();
+                                                    goToGroup(groupNameInput.getText().toString());
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("makeGroupActivity", "Error adding group", e);
@@ -135,12 +148,12 @@ public class makeGroupActivity extends AppCompatActivity {
                                         results.put(name, data);
                                         mDatabase.child("groups").child(name).setValue(results)
                                                 .addOnSuccessListener(aVoid -> {
-                                                    Log.d("makeListReviewActivity", "List added successfully3");
+                                                    Log.d("makeGroupReviewActivity", "Group added successfully3");
                                                     Toast.makeText(getApplicationContext(),
-                                                                    "List creation successful!",
+                                                                    "Group creation successful!",
                                                                     Toast.LENGTH_LONG)
                                                             .show();
-
+                                                    goToGroup(groupNameInput.getText().toString());
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("makeListActivity", "Error adding list3", e);
@@ -154,7 +167,13 @@ public class makeGroupActivity extends AppCompatActivity {
                         Log.e("makeGroupActivity", "Error getting data", task.getException());
                         String name = groupNameInput.getText().toString();
                         String trail = trailNameInput.getText().toString();
-                        int capacity = Integer.parseInt(capacityInput.getText().toString());
+                        int capacity;
+                        try {
+                            capacity = Integer.parseInt(capacityInput.getText().toString());
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(makeGroupActivity.this, "Please enter a number for capacity.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         data.put("name", name);
                         data.put("trail", trail);
@@ -169,7 +188,7 @@ public class makeGroupActivity extends AppCompatActivity {
                                                     "Group creation successful!",
                                                     Toast.LENGTH_LONG)
                                             .show();
-
+                                    goToGroup(groupNameInput.getText().toString());
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("makeGroupActivity", "Error adding group", e);
@@ -180,7 +199,6 @@ public class makeGroupActivity extends AppCompatActivity {
 
             }
         });
-        goToGroup(groupNameInput.getText().toString());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

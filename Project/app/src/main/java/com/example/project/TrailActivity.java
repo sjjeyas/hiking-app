@@ -23,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Map;
+
 public class TrailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String trail = "Boy Scout Trail";
@@ -73,9 +75,22 @@ public class TrailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
-    // Access a Cloud Firestore instance from your Activity
+    public void editOption(){
+        mDatabase= FirebaseDatabase.getInstance().getReference("trails");
+        mDatabase.child(trail).child("reviews").child(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task){
+                if (!task.isSuccessful()){
+                    Log.e("addReviewActivity", "Error getting data", task.getException());
+                }else{
+                    if(task.getResult().getValue() != null){
+                        Map<String, Object> results = (Map<String, Object>) task.getResult().getValue();
+                        addreview.setText("Edit Review");
+                    }
+                }
+            }
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +135,8 @@ public class TrailActivity extends AppCompatActivity {
                 addReview();
             }
         });
+
+        editOption();
 
         FirebaseApp.initializeApp(this);
         Log.d("TrailActivity", "This is a debug message!");

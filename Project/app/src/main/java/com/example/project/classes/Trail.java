@@ -1,5 +1,7 @@
 package com.example.project.classes;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -7,21 +9,21 @@ import java.util.Map;
 
 public class Trail {
     public String name;
-    public float difficulty;
+    public float rating;
     public float quality;
     public int zipcode;
     public String location;
     public String description;
     public Map<String, Object> reviews;
 
-    public Trail(String n, String l, String d){
+    public Trail(String n, String l, String d, Map<String, Object> r){
         this.name = n;
         this.location = l;
         this.description = d;
-        this.difficulty = 3;
+        this.rating = 0;
         this.quality = 0;
         this.zipcode = 0;
-        this.reviews = new HashMap<>();
+        this.reviews = r;
     }
 
     public Trail() {
@@ -37,16 +39,48 @@ public class Trail {
     public String getDescription() {
         return description;
     }
-    public float getDifficulty() {
-        return difficulty;
+
+    public void updateRating() {
+        Log.d("update Trail", "Updating Rating for " + name);
+        if (reviews.isEmpty()) {
+            rating = 0;
+            Log.d("update Trail", "No Reviews!");
+            return;
+        }
+
+        float sumRating = 0;
+        int count = 0;
+
+        for (Map.Entry<String, Object> entry : reviews.entrySet()) {
+            Map<String, Object> review = (Map<String, Object>) entry.getValue();
+            Object ratingObj = review.get("rating");
+            Log.e("update Trail", " Review: " + review);
+            if(ratingObj instanceof Number){
+                float currRating = ((Number) ratingObj).floatValue();
+                Log.e("update Trail", " Rating: " + currRating);
+                sumRating += currRating;
+            }
+        }
+
+        rating = sumRating / reviews.size(); // Calculate the average
+
+        Log.d("update Trail", "Sum: " + sumRating + " Size: " + reviews.size());
+        Log.d("update Trail", "Rating: " + rating );
     }
 
-    public String getDifficultyString(){
-        int count = Math.round(difficulty);
+    public String getRatingString(){
+        updateRating();
+        int count = Math.round(rating);
 
         StringBuilder result = new StringBuilder();
-        for (int i  = 0; i < count; i++){
-            result.append("★");
+        result.append(rating + " ");
+        for (int i  = 0; i < 5; i++){
+            if (i < count){
+                result.append("★");
+            }
+            else {
+                result.append("☆");
+            }
         }
         return result.toString();
     }

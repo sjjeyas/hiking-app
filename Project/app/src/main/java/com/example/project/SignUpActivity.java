@@ -113,7 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 });
 
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(getApplicationContext(), "User created: " + user.getUid(), Toast.LENGTH_LONG)
+                        Toast.makeText(getApplicationContext(), "User created: " + name, Toast.LENGTH_LONG)
                                 .show();
                         return;
                     } else {

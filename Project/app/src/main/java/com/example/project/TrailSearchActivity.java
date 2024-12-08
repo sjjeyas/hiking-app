@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TrailSearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -80,7 +81,13 @@ public class TrailSearchActivity extends AppCompatActivity {
 
                 for (DataSnapshot trailSnapshot : dataSnapshot.getChildren()) {
                     HashMap<String, String> trailMap = (HashMap<String, String>) trailSnapshot.getValue();
-                    Trail trail = new Trail (trailMap.get("name"), trailMap.get("location"), trailMap.get("description"));
+                    Map<String, Object> reviews = new HashMap<>();
+                    DataSnapshot reviewsSnapshot = trailSnapshot.child("reviews");
+                    for (DataSnapshot reviewSnapshot : reviewsSnapshot.getChildren()) {
+                        reviews.put(reviewSnapshot.getKey(), reviewSnapshot.getValue());
+                    }
+                    Trail trail = new Trail (trailMap.get("name"), trailMap.get("location"), trailMap.get("description"), reviews);
+                    trail.updateRating();
                     trailList.add(trail);
                 }
 
