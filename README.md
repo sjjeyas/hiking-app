@@ -1,4 +1,4 @@
-# Team 23 - ProjectF: GoHiking! App
+# Team 23 - Hiking App
 **Specifications** <br />
 For this app, please use the emulator with the follow specifications:
 Medium Phone
